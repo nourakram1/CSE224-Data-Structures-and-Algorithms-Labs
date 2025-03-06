@@ -11,26 +11,15 @@ import sort.Sort;
 import java.util.List;
 
 import org.junit.jupiter.api.*;
+import sort.SortType;
+import sort.Sorter;
+
 import java.util.Random;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ExecutionTimeTest {
 
     private static final int[] ARRAY_SIZES = {10, 100, 1_000, 5_000, 10_000, 50_000, 100_000, 1_000_000, 10_000_000};
-    private List<Sort<Integer>> sortingAlgorithms;
-
-    @BeforeAll
-    void setup() {
-        sortingAlgorithms = List.of(
-//                new BubbleSort<>(),
-//                new InsertionSort<>(),
-//                new SelectionSort<>(),
-//                new QuickSort<>(),
-//                new MergeSort<>(),
-                new RadixSort<>(),
-                new CountingSort<>()
-        );
-    }
 
     @Test
     void testSortingExecutionTimes() {
@@ -38,10 +27,13 @@ public class ExecutionTimeTest {
             Integer[] randomArray = generateRandomArray(size);
             System.out.println("\n=== Sorting " + size + " elements ===");
 
-            for (Sort<Integer> algorithm : sortingAlgorithms) {
+            for (SortType algorithm : SortType.values()) {
+                //
+                    if(algorithm != SortType.COUNTING_SORT && algorithm != SortType.RADIX_SORT) continue;
+                //
                 Integer[] arrayCopy = randomArray.clone();
                 long startTime = System.nanoTime();
-                algorithm.sort(arrayCopy);
+                Sorter.sort(arrayCopy, algorithm);
                 long endTime = System.nanoTime();
 
                 long durationMs = (endTime - startTime) / 1_000_000;
