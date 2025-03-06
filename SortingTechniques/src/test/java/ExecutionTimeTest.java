@@ -1,14 +1,4 @@
 import org.junit.jupiter.api.TestInstance;
-import sort.ComparisonBased.Deterministic.BubbleSort;
-import sort.ComparisonBased.Deterministic.InsertionSort;
-import sort.ComparisonBased.Deterministic.MergeSort;
-import sort.ComparisonBased.Deterministic.SelectionSort;
-import sort.ComparisonBased.Randomized.QuickSort;
-import sort.NonComparisonBased.CountingSort;
-import sort.NonComparisonBased.RadixSort;
-import sort.Sort;
-
-import java.util.List;
 
 import org.junit.jupiter.api.*;
 import sort.SortType;
@@ -37,8 +27,8 @@ public class ExecutionTimeTest {
                 long endTime = System.nanoTime();
 
                 long durationMs = (endTime - startTime) / 1_000_000;
-                System.out.printf("%s took %d ms%n", algorithm.getClass().getSimpleName(), durationMs);
-                Assertions.assertTrue(isSorted(arrayCopy), algorithm.getClass().getSimpleName() + " did not sort correctly.");
+                System.out.printf("%s took %d ms%n", algorithm.getName(), durationMs);
+                Assertions.assertTrue(isSorted(arrayCopy), algorithm.getName() + " did not sort correctly.");
             }
         }
     }
