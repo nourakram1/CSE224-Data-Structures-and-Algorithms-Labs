@@ -1,4 +1,6 @@
-package sort;
+package sort.ComparisonBased.Randomized;
+
+import sort.Sort;
 
 public class QuickSort<T extends Comparable<T>> extends Sort<T> {
 

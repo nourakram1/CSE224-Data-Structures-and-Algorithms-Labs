@@ -5,6 +5,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 import sort.*;
+import sort.ComparisonBased.Randomized.BogoSort;
+import sort.ComparisonBased.Deterministic.BubbleSort;
+import sort.ComparisonBased.Deterministic.MergeSort;
+import sort.ComparisonBased.Randomized.QuickSort;
+import sort.NonComparisonBased.RadixSort;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +23,7 @@ class SortingTest {
     }
 
     static List<Sort<Long>> longSortingAlgorithms() {
-        return List.of(new BubbleSort<>(), new QuickSort<>(), new MergeSort<>(), new RadixSort<>());
+        return List.of(new BubbleSort<>(), new QuickSort<>(), new MergeSort<>(), new RadixSort<>(), new BogoSort<>());
     }
 
     static List<Sort<Double>> doubleSortingAlgorithms() {

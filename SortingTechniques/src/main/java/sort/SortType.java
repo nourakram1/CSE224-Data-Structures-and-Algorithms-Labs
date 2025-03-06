@@ -9,7 +9,8 @@ public enum SortType {
     BUBBLE_SORT (1, "Bubble sort"),
     MERGE_SORT  (2, "Merge sort"),
     QUICKSORT   (3, "Quicksort"),
-    RADIX_SORT  (4, "Radix sort"),;
+    RADIX_SORT  (4, "Radix sort"),
+    BOGO_SORT   (5, "Bogo Sort");
 
     private final int code;
     private final String name;
