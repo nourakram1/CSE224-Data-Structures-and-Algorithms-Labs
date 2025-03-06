@@ -6,6 +6,7 @@ import sort.SortType;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -52,7 +53,13 @@ public class Main {
                 System.out.println("\nSorted Array:\n" + Arrays.toString(arr));
                 return;
             case 2:
-                System.out.println("\n Intermediate Arrays:\n" + sort.getIntermediateArrays());
+                List<Integer[]> intermediateArrays = sort.getIntermediateArrays();
+                int numIntermediateArrays = intermediateArrays.size();
+
+                System.out.println();
+                for (int i = 1; i <= numIntermediateArrays; i++ ) {
+                    System.out.printf("Intermediate Array %d: %s%n", i, Arrays.toString(intermediateArrays.get(i - 1)));
+                }
                 return;
             default:
                 throw new IllegalArgumentException("Invalid display option");
