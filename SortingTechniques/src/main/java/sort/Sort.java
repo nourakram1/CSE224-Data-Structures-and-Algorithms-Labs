@@ -21,7 +21,7 @@ public abstract class Sort<T extends Comparable<T>> {
      * Each element of the list represents an intermediate version of the array
      * as it was being sorted.
      */
-    private final List<T[]> steps;
+    protected final List<T[]> steps;
 
     /**
      * Constructs a new {@code Sort} instance.
