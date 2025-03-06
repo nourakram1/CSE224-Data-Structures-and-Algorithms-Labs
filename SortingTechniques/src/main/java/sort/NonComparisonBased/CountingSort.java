@@ -40,6 +40,7 @@ public class CountingSort<T extends Number & Comparable<T>> extends Sort<T> {
                 arr[index++] = convertToT(i + minValue, arr[0]);
             }
         }
+        steps.add(arr.clone());
     }
 
     private int min(T[] arr) {
