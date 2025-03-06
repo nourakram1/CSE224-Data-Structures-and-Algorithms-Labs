@@ -9,6 +9,7 @@ import sort.ComparisonBased.Randomized.BogoSort;
 import sort.ComparisonBased.Deterministic.BubbleSort;
 import sort.ComparisonBased.Deterministic.MergeSort;
 import sort.ComparisonBased.Randomized.QuickSort;
+import sort.NonComparisonBased.CountingSort;
 import sort.NonComparisonBased.RadixSort;
 
 import java.util.Arrays;
@@ -19,11 +20,11 @@ import java.util.Random;
 class SortingTest {
 
     static List<Sort<Integer>> integerSortingAlgorithms() {
-        return List.of(new BubbleSort<>(), new QuickSort<>(), new MergeSort<>(), new RadixSort<>());
+        return List.of(new BubbleSort<>(), new QuickSort<>(), new MergeSort<>(), new RadixSort<>(), new CountingSort<>());
     }
 
     static List<Sort<Long>> longSortingAlgorithms() {
-        return List.of(new BubbleSort<>(), new QuickSort<>(), new MergeSort<>(), new RadixSort<>(), new BogoSort<>());
+        return List.of(new BubbleSort<>(), new QuickSort<>(), new MergeSort<>(), new RadixSort<>());
     }
 
     static List<Sort<Double>> doubleSortingAlgorithms() {

@@ -6,11 +6,12 @@ import java.util.Arrays;
 
 @Getter
 public enum SortType {
-    BUBBLE_SORT (1, "Bubble sort"),
-    MERGE_SORT  (2, "Merge sort"),
-    QUICKSORT   (3, "Quicksort"),
-    RADIX_SORT  (4, "Radix sort"),
-    BOGO_SORT   (5, "Bogo Sort");
+    BUBBLE_SORT     (1, "Bubble sort"),
+    MERGE_SORT      (2, "Merge sort"),
+    QUICKSORT       (3, "Quicksort"),
+    RADIX_SORT      (4, "Radix sort"),
+    COUNTING_SORT   (5, "Counting Sort"),
+    BOGO_SORT       (6, "Bogo Sort");
 
     private final int code;
     private final String name;
