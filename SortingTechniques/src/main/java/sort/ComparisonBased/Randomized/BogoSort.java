@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class BogoSort<T extends Comparable<T>> extends Sort<T> {
     @Override
-    public void sort(T[] arr) {
+    public void sort(T[] arr, boolean trackSteps) {
         while(!isSorted(arr)) {
             shuffle(arr);
             steps.add(arr.clone());

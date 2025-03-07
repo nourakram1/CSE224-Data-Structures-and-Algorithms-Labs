@@ -20,7 +20,7 @@ public class RadixSort<T extends Number & Comparable<T>> extends Sort<T> {
     }
 
     @Override
-    public void sort(T[] arr) {
+    public void sort(T[] arr, boolean trackSteps) {
         if (arr.length <= 1) return;
 
         // Find the maximum absolute value to determine digit count

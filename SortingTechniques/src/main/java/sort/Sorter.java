@@ -89,7 +89,7 @@ public class Sorter {
     @SuppressWarnings("unchecked")
     public static <T extends Comparable<T>> void sort(T[] arr, SortType sortType) {
         Sort<T> sorter = (Sort<T>) SortFactory.getSort(sortType);
-        sorter.sort(arr);
+        sorter.sort(arr, false);
     }
 
     /**

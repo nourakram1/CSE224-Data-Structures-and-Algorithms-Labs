@@ -7,7 +7,7 @@ import java.util.Arrays;
 public class CountingSort<T extends Number & Comparable<T>> extends Sort<T> {
 
     @Override
-    public void sort(T[] arr) {
+    public void sort(T[] arr, boolean trackSteps) {
         if (arr.length == 0) return;
 
         // Ensure CountingSort is only used for Integer types

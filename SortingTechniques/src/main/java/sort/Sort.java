@@ -36,9 +36,10 @@ public abstract class Sort<T extends Comparable<T>> {
      * <p>The implementation of this method should perform the sorting of the given array
      * and add each intermediate state of the array to the {@code steps} list.</p>
      *
-     * @param arr the array to be sorted.
+     * @param arr        the array to be sorted.
+     * @param trackSteps
      */
-    abstract public void sort(T[] arr);
+    abstract public void sort(T[] arr, boolean trackSteps);
 
     /**
      * Returns the list of intermediate arrays recorded during the sorting process.

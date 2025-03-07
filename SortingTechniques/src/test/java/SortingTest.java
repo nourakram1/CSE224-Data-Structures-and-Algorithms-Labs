@@ -5,7 +5,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 import sort.*;
-import sort.ComparisonBased.Randomized.BogoSort;
 import sort.ComparisonBased.Deterministic.BubbleSort;
 import sort.ComparisonBased.Deterministic.MergeSort;
 import sort.ComparisonBased.Randomized.QuickSort;
@@ -46,7 +45,7 @@ class SortingTest {
     void testIntegerSorting(Sort<Integer> sorter) {
         Integer[] input = {5, 3, 10, 8, 4, 2, -2};
         Integer[] expected = {-2, 2, 3, 4, 5, 8, 10};
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -55,7 +54,7 @@ class SortingTest {
     void testIntegerReversedArray(Sort<Integer> sorter) {
         Integer[] input = {10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
         Integer[] expected = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -64,7 +63,7 @@ class SortingTest {
     void testIntegerEmptyArray(Sort<Integer> sorter) {
         Integer[] input = {};
         Integer[] expected = {};
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -73,7 +72,7 @@ class SortingTest {
     void testSingleElementArray(Sort<Integer> sorter) {
         Integer[] input = {42};
         Integer[] expected = {42};
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -82,7 +81,7 @@ class SortingTest {
     void testAllIdenticalElements(Sort<Integer> sorter) {
         Integer[] input = {7, 7, 7, 7, 7};
         Integer[] expected = {7, 7, 7, 7, 7};
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -91,7 +90,7 @@ class SortingTest {
     void testAlreadySortedArray(Sort<Integer> sorter) {
         Integer[] input = {1, 2, 3, 4, 5, 6, 7};
         Integer[] expected = {1, 2, 3, 4, 5, 6, 7};
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -100,7 +99,7 @@ class SortingTest {
     void testAlternatingHighLowValues(Sort<Integer> sorter) {
         Integer[] input = {10, -10, 9, -9, 8, -8, 7, -7, 6, -6};
         Integer[] expected = {-10, -9, -8, -7, -6, 6, 7, 8, 9, 10};
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -109,7 +108,7 @@ class SortingTest {
     void testExtremeValues(Sort<Integer> sorter) {
         Integer[] input = {Integer.MAX_VALUE, Integer.MIN_VALUE, 0, -1, 1};
         Integer[] expected = {Integer.MIN_VALUE, -1, 0, 1, Integer.MAX_VALUE};
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -118,7 +117,7 @@ class SortingTest {
     void testOddLengthArray(Sort<Integer> sorter) {
         Integer[] input = {3, 1, 4, 1, 5, 9, 2};
         Integer[] expected = {1, 1, 2, 3, 4, 5, 9};
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -127,7 +126,7 @@ class SortingTest {
     void testEvenLengthArray(Sort<Integer> sorter) {
         Integer[] input = {8, 6, 7, 5, 3, 0, 9, 2};
         Integer[] expected = {0, 2, 3, 5, 6, 7, 8, 9};
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -145,7 +144,7 @@ class SortingTest {
         Integer[] expected = input.clone();
         Arrays.sort(expected);
 
-        sorter.sort(input);
+        sorter.sort(input, false);
 
         assertArrayEquals(expected, input);
     }
@@ -157,7 +156,7 @@ class SortingTest {
     void testLongSorting(Sort<Long> sorter) {
         Long[] input = {5000000000L, 2000000000L, 8000000000L, 1000000000L};
         Long[] expected = {1000000000L, 2000000000L, 5000000000L, 8000000000L};
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -166,7 +165,7 @@ class SortingTest {
     void testLongNegativeNumbers(Sort<Long> sorter) {
         Long[] input = {-100L, -50L, -200L, -10L};
         Long[] expected = {-200L, -100L, -50L, -10L};
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -177,7 +176,7 @@ class SortingTest {
     void testStringSorting(Sort<String> sorter) {
         String[] input = {"Banana", "Apple", "Cherry"};
         String[] expected = {"Apple", "Banana", "Cherry"};
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -186,7 +185,7 @@ class SortingTest {
     void testStringWithDuplicates(Sort<String> sorter) {
         String[] input = {"apple", "banana", "apple", "cherry"};
         String[] expected = {"apple", "apple", "banana", "cherry"};
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -195,7 +194,7 @@ class SortingTest {
     void testEmptyStrings(Sort<String> sorter) {
         String[] input = {"", "hello", "", "world"};
         String[] expected = {"", "", "hello", "world"};
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -207,7 +206,7 @@ class SortingTest {
     void testDoubleSorting(Sort<Double> sorter) {
         Double[] input = {3.5, 1.2, 4.8, 2.3};
         Double[] expected = {1.2, 2.3, 3.5, 4.8};
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -216,7 +215,7 @@ class SortingTest {
     void testDoubleNegativeNumbers(Sort<Double> sorter) {
         Double[] input = {-2.5, -1.1, -3.7, -0.4};
         Double[] expected = {-3.7, -2.5, -1.1, -0.4};
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -251,7 +250,7 @@ class SortingTest {
                 new Person("Alice", 25),
                 new Person("Charlie", 30)
         };
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 
@@ -270,7 +269,7 @@ class SortingTest {
                 new Person("Charlie", 25),
                 new Person("David", 30)
         };
-        sorter.sort(input);
+        sorter.sort(input, false);
         assertArrayEquals(expected, input);
     }
 }

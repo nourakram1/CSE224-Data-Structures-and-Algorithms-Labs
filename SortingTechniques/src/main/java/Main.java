@@ -38,7 +38,7 @@ public class Main {
 
         // sort.Sort
         Sort<Integer> sort = SortFactory.getSort(SortType.getByCode(algorithm));
-        sort.sort(arr);
+        sort.sort(arr, false);
 
         // Display post-sort options
         System.out.println("\nPlease choose one of the following options:");
