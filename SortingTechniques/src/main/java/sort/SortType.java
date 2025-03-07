@@ -1,8 +1,8 @@
 package sort;
 
 import lombok.Getter;
-
 import java.util.Arrays;
+
 
 @Getter
 public enum SortType {
@@ -10,10 +10,10 @@ public enum SortType {
     INSERTION_SORT  (2, "Insertion sort"),
     SELECTION_SORT  (3, "Selection sort"),
     MERGE_SORT      (4, "Merge sort"),
-    QUICK_SORT       (5, "Quick sort"),
+    QUICKSORT       (5, "Quicksort"),
     RADIX_SORT      (6, "Radix sort"),
     COUNTING_SORT   (7, "Counting Sort"),
-    BOGO_SORT       (8, "Bogo Sort");
+    BOGOSORT        (8, "Bogosort");
 
 
     private final int code;

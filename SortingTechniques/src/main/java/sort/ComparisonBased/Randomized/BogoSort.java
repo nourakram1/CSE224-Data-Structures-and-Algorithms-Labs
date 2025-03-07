@@ -4,6 +4,7 @@ import java.util.Random;
 
 import sort.Sort;
 
+
 public class BogoSort<T extends Comparable<T>> extends Sort<T> {
 
     public BogoSort(boolean showSteps) {

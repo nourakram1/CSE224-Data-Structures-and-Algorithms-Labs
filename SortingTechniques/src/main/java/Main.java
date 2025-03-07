@@ -34,12 +34,7 @@ public class Main {
 
         // Get chosen algorithm
         Scanner scanner = new Scanner(System.in);
-        int algorithm = Integer.parseInt(scanner.nextLine());
-        boolean steps = scanner.nextBoolean();
-
-        // sort.Sort
-        Sort<Integer> sort = SortFactory.getSort(SortType.getByCode(algorithm), steps);
-        sort.sort(arr);
+        SortType sortType = SortType.getByCode(Integer.parseInt(scanner.nextLine()));
 
         // Display post-sort options
         System.out.println("\nPlease choose one of the following options:");
@@ -49,13 +44,19 @@ public class Main {
         );
 
         int displayOption = Integer.parseInt(scanner.nextLine());
+        boolean showSteps = displayOption == 2;
         scanner.close();
+
+        // Sort
+        Sort<Integer> sorter = SortFactory.getSort(sortType, showSteps);
+        sorter.sort(arr);
+
         switch (displayOption) {
             case 1:
                 System.out.println("\nSorted Array:\n" + Arrays.toString(arr));
                 return;
             case 2:
-                List<Integer[]> intermediateArrays = sort.getIntermediateArrays();
+                List<Integer[]> intermediateArrays = sorter.getIntermediateArrays();
                 int numIntermediateArrays = intermediateArrays.size();
 
                 System.out.println();

@@ -1,7 +1,9 @@
 package sort;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
 
 /**
  * An abstract class that provides a framework for sorting arrays.
@@ -39,10 +41,13 @@ public abstract class Sort<T extends Comparable<T>> {
      */
     public Sort(boolean showSteps) {
         this.showSteps = showSteps;
-        if (showSteps)
+        if (showSteps) {
             steps = new ArrayList<>();
-        else
+        }
+        else {
             steps = null;
+        }
+
     }
 
     /**
@@ -73,14 +78,10 @@ public abstract class Sort<T extends Comparable<T>> {
         return steps;
     }
 
-    /**
-     * stores the current step in sorting algorithm
-     * 
-     * @param arr intermediate arr
-     */
     protected void addStep(T[] arr) {
         if (showSteps) {
-            addStep(arr);
+            assert steps != null;
+            steps.add(Arrays.copyOf(arr, arr.length));
         }
     }
 

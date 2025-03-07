@@ -4,8 +4,9 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.junit.jupiter.api.*;
+import sort.Sort;
+import sort.SortFactory;
 import sort.SortType;
-import sort.Sorter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +35,8 @@ public class ExecutionTimeTest {
 
                 Integer[] arrayCopy = randomArray.clone();
                 long startTime = System.nanoTime();
-                Sorter.sort(arrayCopy, algorithm, true);
+                Sort<Integer> sorter = SortFactory.getSort(algorithm, false);
+                sorter.sort(arrayCopy);
                 long endTime = System.nanoTime();
 
                 long durationMs = (endTime - startTime) / 1_000_000;
