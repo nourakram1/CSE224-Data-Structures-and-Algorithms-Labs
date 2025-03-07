@@ -1,8 +1,8 @@
 package sort.NonComparisonBased;
 
-import sort.Sort;
-
 import java.util.Arrays;
+
+import sort.Sort;
 
 public class CountingSort<T extends Number & Comparable<T>> extends Sort<T> {
 
@@ -12,7 +12,8 @@ public class CountingSort<T extends Number & Comparable<T>> extends Sort<T> {
 
     @Override
     public void sort(T[] arr) {
-        if (arr.length == 0) return;
+        if (arr.length == 0)
+            return;
 
         // Ensure CountingSort is only used for Integer types
         if (!(arr[0] instanceof Integer)) {
@@ -44,6 +45,7 @@ public class CountingSort<T extends Number & Comparable<T>> extends Sort<T> {
                 arr[index++] = convertToT(i + minValue, arr[0]);
             }
         }
+        addStep(arr);
     }
 
     private int min(T[] arr) {

@@ -1,18 +1,23 @@
 package sort;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An abstract class that provides a framework for sorting arrays.
  *
- * <p>This class is designed for sorting an array of elements that implement the
- * {@code Comparable} interface. During the sorting process, the algorithm should
+ * <p>
+ * This class is designed for sorting an array of elements that implement the
+ * {@code Comparable} interface. During the sorting process, the algorithm
+ * should
  * add each intermediate state of the array to the private {@code steps} list.
- * These intermediate arrays can later be retrieved using the {@link #getIntermediateArrays()}
- * method.</p>
+ * These intermediate arrays can later be retrieved using the
+ * {@link #getIntermediateArrays()}
+ * method.
+ * </p>
  *
- * @param <T> the type of elements to be sorted, which must implement {@code Comparable<T>}.
+ * @param <T> the type of elements to be sorted, which must implement
+ *            {@code Comparable<T>}.
  */
 public abstract class Sort<T extends Comparable<T>> {
 
@@ -25,7 +30,7 @@ public abstract class Sort<T extends Comparable<T>> {
 
     /**
      * boolean that entered by client to determine whether steps
-     * will be added or not 
+     * will be added or not
      */
     protected final boolean showSteps;
 
@@ -34,7 +39,7 @@ public abstract class Sort<T extends Comparable<T>> {
      */
     public Sort(boolean showSteps) {
         this.showSteps = showSteps;
-        if(showSteps)
+        if (showSteps)
             steps = new ArrayList<>();
         else
             steps = null;
@@ -43,8 +48,11 @@ public abstract class Sort<T extends Comparable<T>> {
     /**
      * Sorts the specified array.
      *
-     * <p>The implementation of this method should perform the sorting of the given array
-     * and add each intermediate state of the array to the {@code steps} list.</p>
+     * <p>
+     * The implementation of this method should perform the sorting of the given
+     * array
+     * and add each intermediate state of the array to the {@code steps} list.
+     * </p>
      *
      * @param arr the array to be sorted.
      */
@@ -53,8 +61,11 @@ public abstract class Sort<T extends Comparable<T>> {
     /**
      * Returns the list of intermediate arrays recorded during the sorting process.
      *
-     * <p>Each element in the returned list represents a state of the array at a certain
-     * step during the sorting process.</p>
+     * <p>
+     * Each element in the returned list represents a state of the array at a
+     * certain
+     * step during the sorting process.
+     * </p>
      *
      * @return a {@code List} containing the intermediate states of the array.
      */
@@ -64,11 +75,12 @@ public abstract class Sort<T extends Comparable<T>> {
 
     /**
      * stores the current step in sorting algorithm
+     * 
      * @param arr intermediate arr
      */
     protected void addStep(T[] arr) {
-        if(showSteps) {
-            steps.add(arr.clone());
+        if (showSteps) {
+            addStep(arr);
         }
     }
 

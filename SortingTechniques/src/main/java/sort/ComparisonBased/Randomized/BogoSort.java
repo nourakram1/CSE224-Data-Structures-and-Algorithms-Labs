@@ -1,19 +1,18 @@
 package sort.ComparisonBased.Randomized;
 
-import sort.Sort;
-
 import java.util.Random;
 
+import sort.Sort;
 
 public class BogoSort<T extends Comparable<T>> extends Sort<T> {
-    
+
     public BogoSort(boolean showSteps) {
         super(showSteps);
     }
 
     @Override
     public void sort(T[] arr) {
-        while(!isSorted(arr)) {
+        while (!isSorted(arr)) {
             shuffle(arr);
             addStep(arr);
         }

@@ -1,14 +1,15 @@
 package sort.NonComparisonBased;
 
-import sort.Sort;
 import java.util.LinkedList;
 import java.util.Queue;
+
+import sort.Sort;
 
 public class RadixSort<T extends Number & Comparable<T>> extends Sort<T> {
     private static final int BASE = 10;
     private final Queue<T>[] positiveBuckets;
     private final Queue<T>[] negativeBuckets;
-    
+
     @SuppressWarnings("unchecked")
     public RadixSort(boolean showSteps) {
         super(showSteps);
@@ -22,7 +23,8 @@ public class RadixSort<T extends Number & Comparable<T>> extends Sort<T> {
 
     @Override
     public void sort(T[] arr) {
-        if (arr.length <= 1) return;
+        if (arr.length <= 1)
+            return;
 
         // Find the maximum absolute value to determine digit count
         long maxValue = 0;
@@ -34,6 +36,7 @@ public class RadixSort<T extends Number & Comparable<T>> extends Sort<T> {
         for (long place = 1; maxValue / place > 0; place *= BASE) {
             distribute(arr, place);
             collect(arr);
+            addStep(arr);
         }
     }
 
