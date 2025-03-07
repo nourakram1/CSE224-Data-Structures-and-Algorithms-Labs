@@ -5,7 +5,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 import sort.*;
-import sort.ComparisonBased.Randomized.BogoSort;
+// import sort.ComparisonBased.Randomized.BogoSort;
 import sort.ComparisonBased.Deterministic.BubbleSort;
 import sort.ComparisonBased.Deterministic.MergeSort;
 import sort.ComparisonBased.Randomized.QuickSort;
@@ -20,23 +20,23 @@ import java.util.Random;
 class SortingTest {
 
     static List<Sort<Integer>> integerSortingAlgorithms() {
-        return List.of(new BubbleSort<>(), new QuickSort<>(), new MergeSort<>(), new RadixSort<>(), new CountingSort<>());
+        return List.of(new BubbleSort<>(true), new QuickSort<>(true), new MergeSort<>(true), new RadixSort<>(true), new CountingSort<>(true));
     }
 
     static List<Sort<Long>> longSortingAlgorithms() {
-        return List.of(new BubbleSort<>(), new QuickSort<>(), new MergeSort<>(), new RadixSort<>());
+        return List.of(new BubbleSort<>(true), new QuickSort<>(true), new MergeSort<>(true), new RadixSort<>(true));
     }
 
     static List<Sort<Double>> doubleSortingAlgorithms() {
-        return List.of(new BubbleSort<>(), new QuickSort<>(), new MergeSort<>());
+        return List.of(new BubbleSort<>(true), new QuickSort<>(true), new MergeSort<>(true));
     }
 
     static List<Sort<String>> stringSortingAlgorithms() {
-        return List.of(new BubbleSort<>(), new QuickSort<>(), new MergeSort<>());
+        return List.of(new BubbleSort<>(true), new QuickSort<>(true), new MergeSort<>(true));
     }
 
     static List<Sort<Person>> personSortingAlgorithms() {
-        return List.of(new BubbleSort<>(), new QuickSort<>(), new MergeSort<>());
+        return List.of(new BubbleSort<>(true), new QuickSort<>(true), new MergeSort<>(true));
     }
 
     // -------------------- Integer Tests --------------------

@@ -4,12 +4,18 @@ import sort.Sort;
 
 import java.util.Random;
 
+
 public class BogoSort<T extends Comparable<T>> extends Sort<T> {
+    
+    public BogoSort(boolean showSteps) {
+        super(showSteps);
+    }
+
     @Override
     public void sort(T[] arr) {
         while(!isSorted(arr)) {
             shuffle(arr);
-            steps.add(arr.clone());
+            addStep(arr);
         }
     }
 
@@ -19,12 +25,6 @@ public class BogoSort<T extends Comparable<T>> extends Sort<T> {
             int j = random.nextInt(i + 1);
             swap(arr, i, j);
         }
-    }
-
-    private void swap(T[] arr, int i, int j) {
-        T temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
     }
 
     private boolean isSorted(T[] arr) {

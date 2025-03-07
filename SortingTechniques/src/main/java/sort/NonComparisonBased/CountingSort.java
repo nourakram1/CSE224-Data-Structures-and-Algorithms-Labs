@@ -6,6 +6,10 @@ import java.util.Arrays;
 
 public class CountingSort<T extends Number & Comparable<T>> extends Sort<T> {
 
+    public CountingSort(boolean showSteps) {
+        super(showSteps);
+    }
+
     @Override
     public void sort(T[] arr) {
         if (arr.length == 0) return;

@@ -8,9 +8,10 @@ public class RadixSort<T extends Number & Comparable<T>> extends Sort<T> {
     private static final int BASE = 10;
     private final Queue<T>[] positiveBuckets;
     private final Queue<T>[] negativeBuckets;
-
+    
     @SuppressWarnings("unchecked")
-    public RadixSort() {
+    public RadixSort(boolean showSteps) {
+        super(showSteps);
         positiveBuckets = (Queue<T>[]) new Queue[BASE];
         negativeBuckets = (Queue<T>[]) new Queue[BASE];
         for (int i = 0; i < BASE; i++) {

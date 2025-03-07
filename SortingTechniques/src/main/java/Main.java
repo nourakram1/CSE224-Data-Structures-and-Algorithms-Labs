@@ -35,9 +35,10 @@ public class Main {
         // Get chosen algorithm
         Scanner scanner = new Scanner(System.in);
         int algorithm = Integer.parseInt(scanner.nextLine());
+        boolean steps = scanner.nextBoolean();
 
         // sort.Sort
-        Sort<Integer> sort = SortFactory.getSort(SortType.getByCode(algorithm));
+        Sort<Integer> sort = SortFactory.getSort(SortType.getByCode(algorithm), steps);
         sort.sort(arr);
 
         // Display post-sort options
@@ -48,6 +49,7 @@ public class Main {
         );
 
         int displayOption = Integer.parseInt(scanner.nextLine());
+        scanner.close();
         switch (displayOption) {
             case 1:
                 System.out.println("\nSorted Array:\n" + Arrays.toString(arr));
@@ -64,5 +66,6 @@ public class Main {
             default:
                 throw new IllegalArgumentException("Invalid display option");
         }
+
     }
 }

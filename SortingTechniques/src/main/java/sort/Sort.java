@@ -24,10 +24,20 @@ public abstract class Sort<T extends Comparable<T>> {
     protected final List<T[]> steps;
 
     /**
+     * boolean that entered by client to determine whether steps
+     * will be added or not 
+     */
+    protected final boolean showSteps;
+
+    /**
      * Constructs a new {@code Sort} instance.
      */
-    public Sort() {
-        steps = new ArrayList<>();
+    public Sort(boolean showSteps) {
+        this.showSteps = showSteps;
+        if(showSteps)
+            steps = new ArrayList<>();
+        else
+            steps = null;
     }
 
     /**
@@ -50,5 +60,21 @@ public abstract class Sort<T extends Comparable<T>> {
      */
     public List<T[]> getIntermediateArrays() {
         return steps;
+    }
+
+    /**
+     * stores the current step in sorting algorithm
+     * @param arr intermediate arr
+     */
+    protected void addStep(T[] arr) {
+        if(showSteps) {
+            steps.add(arr.clone());
+        }
+    }
+
+    protected void swap(T[] arr, int index1, int index2) {
+        T temp = arr[index1];
+        arr[index1] = arr[index2];
+        arr[index2] = temp;
     }
 }

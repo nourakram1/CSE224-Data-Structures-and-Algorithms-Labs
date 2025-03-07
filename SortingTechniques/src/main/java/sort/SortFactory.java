@@ -9,14 +9,15 @@ import sort.NonComparisonBased.RadixSort;
 
 public class SortFactory {
 
-    public static <T extends Number & Comparable<T>> Sort<T> getSort(SortType sortType) {
+    public static <T extends Number & Comparable<T>> Sort<T> getSort(SortType sortType, boolean showSteps) {
         return switch (sortType) {
-            case SortType.BUBBLE_SORT -> new BubbleSort<>();
-            case SortType.MERGE_SORT -> new MergeSort<>();
-            case SortType.QUICKSORT -> new QuickSort<>();
-            case SortType.RADIX_SORT -> new RadixSort<>();
-            case SortType.COUNTING_SORT -> new CountingSort<>();
-            case SortType.BOGO_SORT -> new BogoSort<>();
+            case SortType.BUBBLE_SORT   -> new BubbleSort<>(showSteps);
+            case SortType.MERGE_SORT    -> new MergeSort<>(showSteps);
+            case SortType.QUICKSORT     -> new QuickSort<>(showSteps);
+            case SortType.RADIX_SORT    -> new RadixSort<>(showSteps);
+            case SortType.COUNTING_SORT -> new CountingSort<>(showSteps);
+            case SortType.BOGO_SORT     -> new BogoSort<>(showSteps);
+            default                     -> new QuickSort<>(showSteps);
         };
     }
 }
