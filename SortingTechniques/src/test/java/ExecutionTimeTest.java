@@ -3,7 +3,8 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import sort.Sort;
 import sort.SortFactory;
 import sort.SortType;
@@ -12,96 +13,105 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.*;
+import java.util.stream.IntStream;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class ExecutionTimeTest {
 
-    private static final int[] ARRAY_SIZES = {100, 150, 300, 450, 600, 750, 1_000, 2_000, 3_000, 4_000, 5_000, 7_500, 10_000,12_500,15_000, 17_500,20_000, 22_500, 25_000,30_000, 35_000, 40_000, 45_000, 50_000, 75_000, 100_000,250_000,500_000,750_000, 1_000_000};
-    private final Map<SortType, List<Long>> executionTimes = new HashMap<>();
+    private static final int[] ARRAY_SIZES = IntStream.iterate(25, n -> n <= 2_500, n -> n + 25).toArray();
+    private static final int REPEATS = 40;
+    private static final Map<SortType, List<Long>> executionTimes = new ConcurrentHashMap<>();
+    private static final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-    @Test
-    void testSortingExecutionTimes() {
-        for (SortType algorithm : SortType.values()) {
-            if (algorithm != SortType.COUNTING_SORT && algorithm != SortType.RADIX_SORT) continue;
+    @BeforeAll
+    public static void setup() {
+        for (SortType algorithm : EnumSet.of(SortType.BUBBLE_SORT, SortType.INSERTION_SORT, SortType.MERGE_SORT,
+                SortType.QUICKSORT, SortType.RADIX_SORT, SortType.COUNTING_SORT)) {
             executionTimes.put(algorithm, new ArrayList<>());
-        }
-
-        for (int size : ARRAY_SIZES) {
-            Integer[] randomArray = generateRandomArray(size);
-            System.out.println("\n=== Sorting " + size + " elements ===");
-
-            for (SortType algorithm : SortType.values()) {
-                if (algorithm != SortType.COUNTING_SORT && algorithm != SortType.RADIX_SORT) continue;
-
-                Integer[] arrayCopy = randomArray.clone();
-                long startTime = System.nanoTime();
-                Sort<Integer> sorter = SortFactory.getSort(algorithm, false);
-                sorter.sort(arrayCopy);
-                long endTime = System.nanoTime();
-
-                long durationMs = (endTime - startTime) / 1_000_000;
-                executionTimes.get(algorithm).add(durationMs);
-
-                System.out.printf("%s took %d ms%n", algorithm.getName(), durationMs);
-                Assertions.assertTrue(isSorted(arrayCopy), algorithm.getName() + " did not sort correctly.");
-            }
-        }
-
-        // Ensure the GUI runs on the Event Dispatch Thread (EDT)
-        SwingUtilities.invokeLater(this::createChart);
-
-        // Prevent JUnit from terminating immediately (debugging purpose)
-        try {
-            Thread.sleep(9999999);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
-    private Integer[] generateRandomArray(int size) {
-        Random rand = new Random();
-        Integer[] array = new Integer[size];
-        for (int i = 0; i < size; i++) {
-            array[i] = rand.nextInt(10000);
+    @Test
+    public void testSortingAlgorithms() {
+        for (SortType algorithm : executionTimes.keySet()) {
+            System.out.println("\n=== Testing " + algorithm.getName() + " ===");
+            for (int size : ARRAY_SIZES) {
+                Integer[] randomArray = generateRandomArray(size);
+                measureSortingTime(algorithm, randomArray.clone(), size);
+            }
         }
-        return array;
+
+        showChartAndWait();  // Show the graph and wait for user to close it
+    }
+
+    private void measureSortingTime(SortType algorithm, Integer[] array, int size) {
+        long totalDurationNs = 0;
+
+        for (int repeat = 0; repeat < REPEATS; repeat++) {
+            Integer[] arrayCopy = array.clone();
+            Sort<Integer> sort = SortFactory.getSort(algorithm, false);
+
+            long startTime = System.nanoTime();
+            sort.sort(arrayCopy);
+            long endTime = System.nanoTime();
+
+            totalDurationNs += (endTime - startTime);
+
+            assertTrue(isSorted(arrayCopy), algorithm.getName() + " did not sort correctly");
+        }
+
+        long avgDurationUs = (totalDurationNs / REPEATS) / 1_000;
+        executionTimes.get(algorithm).add(avgDurationUs);
+        dataset.addValue(avgDurationUs, algorithm.getName(), String.valueOf(size));
+
+        System.out.printf("%s took %d µs (avg over %d runs)%n", algorithm.getName(), avgDurationUs, REPEATS);
     }
 
     private boolean isSorted(Integer[] array) {
         for (int i = 1; i < array.length; i++) {
-            if (array[i - 1] > array[i]) return false;
+            if (array[i - 1] > array[i]) {
+                return false;
+            }
         }
         return true;
     }
 
-    private void createChart() {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    private Integer[] generateRandomArray(int size) {
+        Random rand = new Random();
+        return rand.ints(size, 1, 1_000_000).boxed().toArray(Integer[]::new);
+    }
 
-        for (SortType algorithm : executionTimes.keySet()) {
-            List<Long> times = executionTimes.get(algorithm);
-            for (int i = 0; i < ARRAY_SIZES.length; i++) {
-                dataset.addValue(times.get(i), algorithm.getName(), String.valueOf(ARRAY_SIZES[i]));
-            }
-        }
-
+    private void showChartAndWait() {
         JFreeChart chart = ChartFactory.createLineChart(
-                "Sorting Execution Time",
+                "Sorting Algorithm Execution Time",
                 "Array Size",
-                "Time (ms)",
+                "Time (µs)",
                 dataset,
                 PlotOrientation.VERTICAL,
-                true, true, false);
+                true, true, false
+        );
 
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Sorting Performance");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(10_000, 10_0000);
+        JFrame frame = new JFrame("Sorting Performance");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  // Allow test to continue after closing
+        frame.setSize(1000, 800);
+        frame.setLayout(new BorderLayout());
 
-            ChartPanel chartPanel = new ChartPanel(chart);
-            chartPanel.setPreferredSize(new Dimension(10_000, 10_000));
-            frame.add(chartPanel);
-            frame.pack();
-            frame.setVisible(true);
-        });
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(1000, 800));
+        frame.add(chartPanel, BorderLayout.CENTER);
+
+        frame.pack();
+        frame.setVisible(true);
+
+        // Block execution until the user closes the window
+        synchronized (frame) {
+            try {
+                frame.wait();  // Waits indefinitely until notified
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

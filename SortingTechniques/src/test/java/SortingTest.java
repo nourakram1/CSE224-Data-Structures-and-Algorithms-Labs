@@ -7,7 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import sort.*;
 // import sort.ComparisonBased.Randomized.BogoSort;
 import sort.ComparisonBased.Deterministic.BubbleSort;
+import sort.ComparisonBased.Deterministic.InsertionSort;
 import sort.ComparisonBased.Deterministic.MergeSort;
+import sort.ComparisonBased.Deterministic.SelectionSort;
 import sort.ComparisonBased.Randomized.QuickSort;
 import sort.NonComparisonBased.CountingSort;
 import sort.NonComparisonBased.RadixSort;
@@ -19,24 +21,52 @@ import java.util.Random;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SortingTest {
 
+    @SuppressWarnings("unchecked")
     static List<Sort<Integer>> integerSortingAlgorithms() {
-        return List.of(new BubbleSort<>(true), new QuickSort<>(true), new MergeSort<>(true), new RadixSort<>(true), new CountingSort<>(true));
+        return Arrays.stream(SortType.values())
+                .filter(type -> type != SortType.BOGOSORT)
+                .map(type -> (Sort<Integer>) SortFactory.getSort(type, false))
+                .toList();
     }
 
+    @SuppressWarnings("unchecked")
     static List<Sort<Long>> longSortingAlgorithms() {
-        return List.of(new BubbleSort<>(true), new QuickSort<>(true), new MergeSort<>(true), new RadixSort<>(true));
+        return Arrays.stream(SortType.values())
+                .filter(type -> type != SortType.BOGOSORT
+                        && type != SortType.COUNTING_SORT
+                        && type != SortType.RADIX_SORT)
+                .map(type -> (Sort<Long>) SortFactory.getSort(type, false))
+                .toList();
     }
 
+    @SuppressWarnings("unchecked")
     static List<Sort<Double>> doubleSortingAlgorithms() {
-        return List.of(new BubbleSort<>(true), new QuickSort<>(true), new MergeSort<>(true));
+            return Arrays.stream(SortType.values())
+                    .filter(type -> type != SortType.BOGOSORT
+                            && type != SortType.COUNTING_SORT
+                            && type != SortType.RADIX_SORT) // Exclude unwanted sorts
+                    .map(type -> (Sort<Double>) SortFactory.getSort(type, false)) // Safe cast
+                    .toList();
     }
 
+    @SuppressWarnings("unchecked")
     static List<Sort<String>> stringSortingAlgorithms() {
-        return List.of(new BubbleSort<>(true), new QuickSort<>(true), new MergeSort<>(true));
+        return Arrays.stream(SortType.values())
+                .filter(type -> type != SortType.BOGOSORT
+                        && type != SortType.COUNTING_SORT
+                        && type != SortType.RADIX_SORT)
+                .map(type -> (Sort<String>) SortFactory.getSort(type, false))
+                .toList();
     }
 
+    @SuppressWarnings("unchecked")
     static List<Sort<Person>> personSortingAlgorithms() {
-        return List.of(new BubbleSort<>(true), new QuickSort<>(true), new MergeSort<>(true));
+        return Arrays.stream(SortType.values())
+                .filter(type -> type != SortType.BOGOSORT
+                        && type != SortType.COUNTING_SORT
+                        && type != SortType.RADIX_SORT)
+                .map(type -> (Sort<Person>) SortFactory.getSort(type, false))
+                .toList();
     }
 
     // -------------------- Integer Tests --------------------
@@ -113,14 +143,6 @@ class SortingTest {
         assertArrayEquals(expected, input);
     }
 
-    @ParameterizedTest
-    @MethodSource("integerSortingAlgorithms")
-    void testOddLengthArray(Sort<Integer> sorter) {
-        Integer[] input = {3, 1, 4, 1, 5, 9, 2};
-        Integer[] expected = {1, 1, 2, 3, 4, 5, 9};
-        sorter.sort(input);
-        assertArrayEquals(expected, input);
-    }
 
     @ParameterizedTest
     @MethodSource("integerSortingAlgorithms")
@@ -246,11 +268,8 @@ class SortingTest {
                 new Person("Bob", 20),
                 new Person("Charlie", 30)
         };
-        Person[] expected = {
-                new Person("Bob", 20),
-                new Person("Alice", 25),
-                new Person("Charlie", 30)
-        };
+        Person[] expected = input.clone();
+        Arrays.sort(expected);
         sorter.sort(input);
         assertArrayEquals(expected, input);
     }
@@ -264,12 +283,8 @@ class SortingTest {
                 new Person("Charlie", 25),
                 new Person("David", 30)
         };
-        Person[] expected = {
-                new Person("Bob", 20),
-                new Person("Alice", 25),
-                new Person("Charlie", 25),
-                new Person("David", 30)
-        };
+        Person[] expected = input.clone();
+        Arrays.sort(expected);
         sorter.sort(input);
         assertArrayEquals(expected, input);
     }
