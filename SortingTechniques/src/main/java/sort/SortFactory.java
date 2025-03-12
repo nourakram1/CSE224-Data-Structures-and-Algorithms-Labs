@@ -1,12 +1,9 @@
 package sort;
 
 import sort.comparison.ComparisonSortType;
+import sort.comparison.deterministic.*;
 import sort.noncomparison.NonComparisonSortType;
-import sort.comparison.deterministic.InsertionSort;
-import sort.comparison.deterministic.SelectionSort;
 import sort.comparison.randomized.BogoSort;
-import sort.comparison.deterministic.BubbleSort;
-import sort.comparison.deterministic.MergeSort;
 import sort.comparison.randomized.QuickSort;
 import sort.noncomparison.CountingSort;
 import sort.noncomparison.RadixSort;
@@ -31,6 +28,7 @@ public class SortFactory {
      */
     public static <T extends Comparable<T>> Sort<T> getComparisonSort(ComparisonSortType comparisonSortType, boolean showSteps) {
         return switch (comparisonSortType) {
+            case ComparisonSortType.HEAPSORT       -> new HeapSort<>(showSteps);
             case ComparisonSortType.BUBBLE_SORT    -> new BubbleSort<>(showSteps);
             case ComparisonSortType.INSERTION_SORT -> new InsertionSort<>(showSteps);
             case ComparisonSortType.SELECTION_SORT -> new SelectionSort<>(showSteps);

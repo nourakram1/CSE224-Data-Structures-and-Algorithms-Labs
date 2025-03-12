@@ -19,7 +19,8 @@ public enum ComparisonSortType implements SortType {
     SELECTION_SORT  (3, "Selection sort"),
     MERGE_SORT      (4, "Merge sort"),
     QUICKSORT       (5, "Quicksort"),
-    BOGOSORT        (6, "Bogosort");
+    HEAPSORT        (6, "Heap sort"),
+    BOGOSORT        (7, "Bogosort");
 
     private final int code;
     private final String name;
