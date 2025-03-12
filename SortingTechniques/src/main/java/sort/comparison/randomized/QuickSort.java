@@ -1,8 +1,9 @@
-package sort.ComparisonBased.Randomized;
+package sort.comparison.randomized;
 
 import java.util.Random;
 
 import sort.Sort;
+import sort.SortUtil;
 
 
 /**
@@ -49,7 +50,7 @@ public class QuickSort<T extends Comparable<T>> extends Sort<T> {
     private int partition(T[] arr, int left, int right) {
         // Select a random pivot index within the range and swap with the rightmost element
         int randomIndex = random.nextInt(left, right + 1);
-        swap(arr, randomIndex, right);
+        SortUtil.swap(arr, randomIndex, right);
         addStep(arr);
         
         T pivot = arr[right]; // Pivot is now the rightmost element
@@ -58,14 +59,14 @@ public class QuickSort<T extends Comparable<T>> extends Sort<T> {
         // Traverse the array and move elements smaller than the pivot to the left side
         for (int i = left; i < right; i++) {
             if (arr[i].compareTo(pivot) < 0) {
-                swap(arr, index, i);
+                SortUtil.swap(arr, index, i);
                 addStep(arr);
                 index++;
             }
         }
         
         // Place the pivot at its correct position
-        swap(arr, index, right);
+        SortUtil.swap(arr, index, right);
         addStep(arr);
         return index;
     }

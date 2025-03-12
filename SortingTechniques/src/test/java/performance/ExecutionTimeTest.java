@@ -1,3 +1,5 @@
+package performance;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -8,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import sort.Sort;
 import sort.SortFactory;
 import sort.SortType;
+import sort.comparison.ComparisonSortType;
+import sort.noncomparison.NonComparisonSortType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,16 +31,19 @@ public class ExecutionTimeTest {
 
     @BeforeAll
     public static void setup() {
-        for (SortType algorithm : EnumSet.of(SortType.BUBBLE_SORT, SortType.INSERTION_SORT, SortType.MERGE_SORT,
-                SortType.QUICKSORT, SortType.RADIX_SORT, SortType.COUNTING_SORT)) {
-            executionTimes.put(algorithm, new ArrayList<>());
+        for (ComparisonSortType comparisonSortType : ComparisonSortType.values()) {
+            if (comparisonSortType == ComparisonSortType.BOGOSORT) continue;
+            executionTimes.put(comparisonSortType, new ArrayList<>());
+        }
+        for (NonComparisonSortType nonComparisonSortType : NonComparisonSortType.values()) {
+            executionTimes.put(nonComparisonSortType, new ArrayList<>());
         }
     }
 
     @Test
     public void testSortingAlgorithms() {
         for (SortType algorithm : executionTimes.keySet()) {
-            System.out.println("\n=== Testing " + algorithm.getName() + " ===");
+            System.out.println("\n——— Testing " + algorithm.getName() + " ———");
             for (int size : ARRAY_SIZES) {
                 Integer[] randomArray = generateRandomArray(size);
                 measureSortingTime(algorithm, randomArray.clone(), size);
@@ -48,11 +55,15 @@ public class ExecutionTimeTest {
 
     private void measureSortingTime(SortType algorithm, Integer[] array, int size) {
         long totalDurationNs = 0;
-
+        Sort<Integer> sort;
         for (int repeat = 0; repeat < REPEATS; repeat++) {
             Integer[] arrayCopy = array.clone();
-            Sort<Integer> sort = SortFactory.getSort(algorithm, false);
-
+            if (algorithm instanceof ComparisonSortType) {
+                sort = SortFactory.getComparisonSort((ComparisonSortType) algorithm, false);
+            }
+            else {
+                sort = SortFactory.getNonComparisonSort(0, (NonComparisonSortType) algorithm, false);
+            }
             long startTime = System.nanoTime();
             sort.sort(arrayCopy);
             long endTime = System.nanoTime();
@@ -66,7 +77,7 @@ public class ExecutionTimeTest {
         executionTimes.get(algorithm).add(avgDurationUs);
         dataset.addValue(avgDurationUs, algorithm.getName(), String.valueOf(size));
 
-        System.out.printf("%s took %d µs (avg over %d runs)%n", algorithm.getName(), avgDurationUs, REPEATS);
+        System.out.printf("%s took %d µs (average over %d runs)%n", algorithm.getName(), avgDurationUs, REPEATS);
     }
 
     private boolean isSorted(Integer[] array) {

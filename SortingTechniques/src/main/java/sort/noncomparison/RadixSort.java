@@ -1,11 +1,16 @@
-package sort.NonComparisonBased;
+package sort.noncomparison;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
 import sort.Sort;
 
-
+/**
+ * Implements the Radix Sort algorithm, a non-comparison-based sorting method that sorts numbers
+ * digit by digit using a positional system.
+ *
+ * @param <T> The type of elements to be sorted, which must be a Number and extend Comparable.
+ */
 public class RadixSort<T extends Number & Comparable<T>> extends Sort<T> {
     private static final int BASE = 10;
     private final Queue<T>[] positiveBuckets;
@@ -22,6 +27,12 @@ public class RadixSort<T extends Number & Comparable<T>> extends Sort<T> {
         }
     }
 
+    /**
+     * Sorts the given array using Radix Sort.
+     * The algorithm sorts numbers by processing each digit from the least significant to the most significant.
+     *
+     * @param arr The array to be sorted.
+     */
     @Override
     public void sort(T[] arr) {
         if (arr.length <= 1)
@@ -42,6 +53,12 @@ public class RadixSort<T extends Number & Comparable<T>> extends Sort<T> {
         }
     }
 
+    /**
+     * Distributes the numbers into buckets based on the current digit place.
+     *
+     * @param arr   The array of numbers to distribute.
+     * @param place The digit place being processed.
+     */
     private void distribute(T[] arr, long place) {
         for (T element : arr) {
             int digit = (int) ((Math.abs(element.longValue()) / place) % BASE);
@@ -53,6 +70,12 @@ public class RadixSort<T extends Number & Comparable<T>> extends Sort<T> {
         }
     }
 
+    /**
+     * Collects the numbers from the buckets and places them back into the array.
+     * Negative numbers are collected in reverse order, while positive numbers are collected in normal order.
+     *
+     * @param arr The array to store the sorted elements.
+     */
     private void collect(T[] arr) {
         int index = 0;
 

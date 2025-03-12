@@ -2,7 +2,7 @@ import input.FileReader;
 import input.Parser;
 import sort.Sort;
 import sort.SortFactory;
-import sort.SortType;
+import sort.comparison.ComparisonSortType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +12,10 @@ public class Main {
     public static void main(String[] args) {
 
         // Read input file
+        if (args.length == 0) {
+            System.out.println("No arguments given");
+            return;
+        }
         String filePath = args[0];
         String inputString;
         inputString = FileReader.readFile(filePath);
@@ -22,13 +26,13 @@ public class Main {
 
         // Display available sorting algorithms
         System.out.println("\nPlease choose one of the following sorting algorithms:");
-        for (SortType sortType : SortType.values()) {
-            System.out.println(sortType.getCode() + ". " + sortType.getName());
+        for (ComparisonSortType comparisonSortType : ComparisonSortType.values()) {
+            System.out.println(comparisonSortType.getCode() + ". " + comparisonSortType.getName());
         }
 
         // Get selected algorithm
         Scanner scanner = new Scanner(System.in);
-        SortType sortType = SortType.getByCode(Integer.parseInt(scanner.nextLine()));
+        ComparisonSortType comparisonSortType = ComparisonSortType.getByCode(Integer.parseInt(scanner.nextLine()));
 
         // Display post-sort options
         System.out.println("\nPlease choose one of the following options:");
@@ -42,7 +46,7 @@ public class Main {
         scanner.close();
 
         // Sort
-        Sort<Integer> sorter = SortFactory.getSort(sortType, showSteps);
+        Sort<Integer> sorter = SortFactory.getComparisonSort(comparisonSortType, showSteps);
         sorter.sort(arr);
 
         switch (displayOption) {

@@ -41,13 +41,7 @@ public abstract class Sort<T extends Comparable<T>> {
      */
     public Sort(boolean showSteps) {
         this.showSteps = showSteps;
-        if (showSteps) {
-            steps = new ArrayList<>();
-        }
-        else {
-            steps = null;
-        }
-
+        steps = new ArrayList<>();
     }
 
     /**
@@ -78,16 +72,20 @@ public abstract class Sort<T extends Comparable<T>> {
         return steps;
     }
 
+    /**
+     * Adds a snapshot of the current state of the array to the steps list.
+     *
+     * <p>
+     * This method is used to record each intermediate state of the array during sorting.
+     * It makes a copy of the array to prevent unintended modifications.
+     * The state is recorded only if {@code showSteps} is set to {@code true}.
+     * </p>
+     *
+     * @param arr the current state of the array to be recorded.
+     */
     protected void addStep(T[] arr) {
         if (showSteps) {
-            assert steps != null;
             steps.add(Arrays.copyOf(arr, arr.length));
         }
-    }
-
-    protected void swap(T[] arr, int index1, int index2) {
-        T temp = arr[index1];
-        arr[index1] = arr[index2];
-        arr[index2] = temp;
     }
 }

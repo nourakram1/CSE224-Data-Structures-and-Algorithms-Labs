@@ -1,16 +1,29 @@
-package sort.ComparisonBased.Deterministic;
+package sort.comparison.deterministic;
 
 import java.lang.reflect.Array;
 
 import sort.Sort;
 
-
+/**
+ * Implements the Merge Sort algorithm, a divide-and-conquer sorting method
+ * that recursively splits an array into smaller subarrays, sorts them, and merges them back.
+ *
+ * @param <T> The type of elements to be sorted, which must extend Comparable.
+ */
 public class MergeSort<T extends Comparable<T>> extends Sort<T> {
 
     public MergeSort(boolean showSteps) {
         super(showSteps);
     }
-    
+
+    /**
+     * Merges two sorted subarrays into a single sorted subarray.
+     *
+     * @param arr The original array containing the subarrays.
+     * @param l   The starting index of the left subarray.
+     * @param m   The middle index separating the subarrays.
+     * @param r   The ending index of the right subarray.
+     */
     private void merge(T[] arr,int l,int m,int r){
         int n1 = m - l + 1;
         int n2 = r - m;
@@ -45,6 +58,15 @@ public class MergeSort<T extends Comparable<T>> extends Sort<T> {
 
         addStep(arr);
     }
+
+    /**
+     * Recursively divides the array into smaller subarrays until each subarray contains one element,
+     * then merges them back in sorted order.
+     *
+     * @param arr The array to be sorted.
+     * @param l   The leftmost index of the current subarray.
+     * @param r   The rightmost index of the current subarray.
+     */
     private void divide(T[] arr,int l,int r){
         if(l<r){
             int m = (l+r)/2;
@@ -54,6 +76,11 @@ public class MergeSort<T extends Comparable<T>> extends Sort<T> {
         }
     }
 
+    /**
+     * Sorts the given array using Merge Sort.
+     *
+     * @param arr The array to be sorted.
+     */
     @Override
     public void sort(T[] arr) {
         divide(arr, 0, arr.length-1);

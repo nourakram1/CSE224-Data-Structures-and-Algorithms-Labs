@@ -1,33 +1,19 @@
 package sort;
 
-import lombok.Getter;
-import java.util.Arrays;
+/**
+ * A common interface for sorting algorithm types.
+ * <p>
+ * Implemented by {@code NonComparisonSortType} and {@code ComparisonSortType}, this interface
+ * provides a unified way to represent sorting types. It allows sorting algorithms to be
+ * managed generically in collections such as {@code List<SortType>} and {@code Map<SortType, ?>}.
+ * </p>
+ */
+public interface SortType {
 
-
-@Getter
-public enum SortType {
-    BUBBLE_SORT     (1, "Bubble sort"),
-    INSERTION_SORT  (2, "Insertion sort"),
-    SELECTION_SORT  (3, "Selection sort"),
-    MERGE_SORT      (4, "Merge sort"),
-    QUICKSORT       (5, "Quicksort"),
-    RADIX_SORT      (6, "Radix sort"),
-    COUNTING_SORT   (7, "Counting Sort"),
-    BOGOSORT        (8, "Bogosort");
-
-
-    private final int code;
-    private final String name;
-
-    SortType(int code, String name) {
-        this.code = code;
-        this.name = name;
-    }
-
-    public static SortType getByCode(int code) {
-        return  Arrays.stream(SortType.values())
-                .filter(sortType -> sortType.code == code)
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
-    }
+    /**
+     * Returns the name of the sorting algorithm.
+     *
+     * @return A string representing the name of the sorting algorithm.
+     */
+    String getName();
 }

@@ -1,6 +1,7 @@
-package sort.ComparisonBased.Deterministic;
+package sort.comparison.deterministic;
 
 import sort.Sort;
+import sort.SortUtil;
 
 /**
  * BubbleSort is a simple, comparison-based sorting algorithm that repeatedly
@@ -29,6 +30,11 @@ public class BubbleSort<T extends Comparable<T>> extends Sort<T> {
         super(showSteps);
     }
 
+    /**
+     * Sorts the given array using Bubble Sort.
+     *
+     * @param arr The array to be sorted.
+     */
     @Override
     public void sort(T[] arr) {
         int size = arr.length;
@@ -36,7 +42,7 @@ public class BubbleSort<T extends Comparable<T>> extends Sort<T> {
             boolean swapped = false;
             for (int j = 0; j < size - i - 1; j++) {
                 if (arr[j].compareTo(arr[j + 1]) > 0) {
-                    swap(arr, j, j + 1);
+                    SortUtil.swap(arr, j, j + 1);
                     swapped = true;
                     addStep(arr);
                 }

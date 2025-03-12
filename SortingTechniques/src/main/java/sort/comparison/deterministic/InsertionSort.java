@@ -1,4 +1,4 @@
-package sort.ComparisonBased.Deterministic;
+package sort.comparison.deterministic;
 
 import sort.Sort;
 
