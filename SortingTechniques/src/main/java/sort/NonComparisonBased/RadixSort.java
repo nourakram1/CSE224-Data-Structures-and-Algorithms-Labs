@@ -37,7 +37,8 @@ public class RadixSort<T extends Number & Comparable<T>> extends Sort<T> {
         for (long place = 1; maxValue / place > 0; place *= BASE) {
             distribute(arr, place);
             collect(arr);
-            addStep(arr);
+            if (this.showSteps)
+                addStep(arr);
         }
     }
 

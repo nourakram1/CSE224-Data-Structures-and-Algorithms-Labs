@@ -155,6 +155,16 @@ class SortingTest {
 
     @ParameterizedTest
     @MethodSource("integerSortingAlgorithms")
+    void testOddLengthArray(Sort<Integer> sorter) {
+        Integer[] input = {8, 6, 7, 5, 3, 0, 2};
+        Integer[] expected = {0, 2, 3, 5, 6, 7, 8};
+        sorter.sort(input);
+        assertArrayEquals(expected, input);
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("integerSortingAlgorithms")
     void testBigArraySorting(Sort<Integer> sorter) {
         Random rand = new Random();
         int SIZE = 10_000;

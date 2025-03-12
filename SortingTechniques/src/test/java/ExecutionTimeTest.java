@@ -80,7 +80,7 @@ public class ExecutionTimeTest {
 
     private Integer[] generateRandomArray(int size) {
         Random rand = new Random();
-        return rand.ints(size, 1, 1_000_000).boxed().toArray(Integer[]::new);
+        return rand.ints(size, 1, 100_000_000).boxed().toArray(Integer[]::new);
     }
 
     private void showChartAndWait() {

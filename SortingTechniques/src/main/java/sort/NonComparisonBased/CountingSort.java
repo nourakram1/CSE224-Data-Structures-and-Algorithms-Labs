@@ -22,7 +22,7 @@ public class CountingSort<T extends Number & Comparable<T>> extends Sort<T> {
 
         int minValue = min(arr);
         int maxValue = max(arr);
-        long range = (long) maxValue - minValue + 1; // Use long to avoid overflow
+        long range = (long) maxValue - minValue + 1;
 
         // Check for range exceeding Integer.MAX_VALUE (practical limitation)
         if (range > Integer.MAX_VALUE) {
@@ -45,7 +45,8 @@ public class CountingSort<T extends Number & Comparable<T>> extends Sort<T> {
                 arr[index++] = convertToT(i + minValue, arr[0]);
             }
         }
-        addStep(arr);
+        if(this.showSteps)
+            addStep(arr);
     }
 
     private int min(T[] arr) {
