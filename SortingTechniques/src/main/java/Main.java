@@ -4,7 +4,6 @@ import sort.Sort;
 import sort.SortFactory;
 import sort.SortType;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -15,13 +14,8 @@ public class Main {
         // Read input file
         String filePath = args[0];
         String inputString;
-        try {
-            inputString = FileReader.readFile(filePath);
-        }
-        catch (IOException e) {
-            System.out.println("Error reading file");
-            return;
-        }
+        inputString = FileReader.readFile(filePath);
+        if (inputString == null) return;
 
         // Parse input
         Integer[] arr = Parser.parseIntegers(inputString, ",");
@@ -32,7 +26,7 @@ public class Main {
             System.out.println(sortType.getCode() + ". " + sortType.getName());
         }
 
-        // Get chosen algorithm
+        // Get selected algorithm
         Scanner scanner = new Scanner(System.in);
         SortType sortType = SortType.getByCode(Integer.parseInt(scanner.nextLine()));
 

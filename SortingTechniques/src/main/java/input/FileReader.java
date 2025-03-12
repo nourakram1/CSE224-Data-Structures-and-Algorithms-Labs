@@ -7,8 +7,13 @@ import org.apache.commons.io.FileUtils;
 
 public class FileReader {
 
-    public static String readFile(String filePath) throws IOException {
+    public static String readFile(String filePath) {
         File file = new File(filePath);
-        return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+        try {
+            return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            System.out.println("Error reading file");
+            return null;
+        }
     }
 }
