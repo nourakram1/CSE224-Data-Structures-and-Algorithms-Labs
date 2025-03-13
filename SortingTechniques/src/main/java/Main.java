@@ -1,5 +1,6 @@
 import input.FileReader;
 import input.Parser;
+import sort.lang.ComparableNumber;
 import sort.Sort;
 import sort.SortFactory;
 import sort.SortType;
@@ -24,8 +25,7 @@ public class Main {
         if (inputString == null) return;
 
         // Parse input
-        Integer[] arr = Parser.parseValues(inputString, ",", Integer::valueOf, Integer[]::new);
-
+        ComparableNumber[] arr = Parser.parseNumbers(inputString, ",");
 
         // Display available sorting algorithms
         System.out.println("\nPlease choose one of the following sorting algorithms:");
@@ -52,7 +52,7 @@ public class Main {
         scanner.close();
 
         // Sort
-        Sort<Integer> sorter = (sortType instanceof ComparisonSortType) ?
+        Sort<ComparableNumber> sorter = (sortType instanceof ComparisonSortType) ?
                 SortFactory.getComparisonSort((ComparisonSortType) sortType, showSteps)
                 : SortFactory.getNonComparisonSort(0, (NonComparisonSortType) sortType, showSteps);
         sorter.sort(arr);
@@ -62,7 +62,7 @@ public class Main {
                 System.out.println("\nSorted Array:\n" + Arrays.toString(arr));
                 return;
             case 2:
-                List<Integer[]> intermediateArrays = sorter.getIntermediateArrays();
+                List<ComparableNumber[]> intermediateArrays = sorter.getIntermediateArrays();
                 int numIntermediateArrays = intermediateArrays.size();
 
                 System.out.println();
