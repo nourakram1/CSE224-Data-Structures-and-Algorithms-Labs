@@ -38,7 +38,7 @@ public class HeapSort<T extends Comparable<T>> extends Sort<T> {
     public void sort(T[] arr, Comparator<T> comparator) {
         int n = arr.length;
 
-        // Step 1: Build the heap
+        // Build the heap
         for (int i = n / 2 - 1; i >= 0; i--) {
             heapify(arr, n, i, comparator);
         }
@@ -47,7 +47,7 @@ public class HeapSort<T extends Comparable<T>> extends Sort<T> {
         for (int i = n - 1; i > 0; i--) {
             SortUtil.swap(arr, 0, i);  // Move the root (max or min) to the end
             heapify(arr, i, 0, comparator);  // Restore heap property
-            addStep(arr);  // Store the step if needed
+            addStep(arr);
         }
     }
 
