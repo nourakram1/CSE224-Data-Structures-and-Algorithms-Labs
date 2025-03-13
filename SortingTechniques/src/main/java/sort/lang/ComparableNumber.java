@@ -3,6 +3,8 @@ package sort.lang;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 /**
  * A wrapper class for {@link Number} that implements {@link Comparable}.
  * This class allows numbers of different types to be compared using
@@ -28,14 +30,16 @@ public class ComparableNumber extends Number implements Comparable<ComparableNum
 
     /**
      * Compares this {@code ComparableNumber} with another based on their
-     * double value representation.
+     * {@code BigDecimal} value representation derived from their string format.
+     * This ensures precision in comparison.
      *
      * @param o the {@code ComparableNumber} to compare with
      * @return a negative integer, zero, or a positive integer as this number
      *         is less than, equal to, or greater than the specified number
+     * @throws NullPointerException if the specified {@code ComparableNumber} is null
      */
     public int compareTo(ComparableNumber o) {
-        return (int) Math.signum(number.doubleValue() - o.getNumber().doubleValue());
+        return new BigDecimal(toString()).compareTo(new BigDecimal(o.toString()));
     }
 
     @Override
