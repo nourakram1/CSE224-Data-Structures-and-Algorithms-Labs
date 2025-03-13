@@ -9,7 +9,6 @@ import stub.Person;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 

@@ -1,9 +1,9 @@
 package sort.comparison.randomized;
 
-import java.util.Random;
-
 import sort.Sort;
 import sort.SortUtil;
+
+import java.util.Random;
 
 /**
  * Implementation of the highly inefficient BogoSort algorithm.
@@ -26,9 +26,10 @@ public class BogoSort<T extends Comparable<T>> extends Sort<T> {
     @Override
     public void sort(T[] arr) {
         while (!isSorted(arr)) {
-            shuffle(arr);
             addStep(arr);
+            shuffle(arr);
         }
+        addStep(arr);
     }
 
     /**

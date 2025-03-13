@@ -4,11 +4,11 @@ import sort.Sort;
 
 
 /**
- * InsertionSort is a simple, comparison-based sorting algorithm that builds the final sorted array 
- * one element at a time by repeatedly picking the next element and inserting it into its correct 
+ * InsertionSort is a simple, comparison-based sorting algorithm that builds the final sorted array
+ * one element at a time by repeatedly picking the next element and inserting it into its correct
  * position within the sorted portion of the array.
  * <p>
- * The algorithm is efficient for small datasets and partially sorted arrays but becomes slow on 
+ * The algorithm is efficient for small datasets and partially sorted arrays but becomes slow on
  * large datasets due to its quadratic time complexity.
  * <p>
  * Time Complexity:
@@ -25,33 +25,33 @@ import sort.Sort;
  */
 public class InsertionSort<T extends Comparable<T>> extends Sort<T> {
 
-   public InsertionSort(boolean showSteps) {
-      super(showSteps);
-   }
+    public InsertionSort(boolean showSteps) {
+        super(showSteps);
+    }
 
-   /**
-    * Sorts the input array using the Insertion Sort algorithm.
-    *
-    * @param arr Array to sort
-    */
-   @Override
-   public void sort(T[] arr) {
-      // Iterate through the array starting from the second element
-      for (int i = 1; i < arr.length; i++) {
-         T key = arr[i];      // Store the current element to be compared
-         int j = i - 1;       // Initialize the index of the previous element
+    /**
+     * Sorts the input array using the Insertion Sort algorithm.
+     *
+     * @param arr Array to sort
+     */
+    @Override
+    public void sort(T[] arr) {
+        // Iterate through the array starting from the second element
+        for (int i = 1; i < arr.length; i++) {
+            addStep(arr);
 
-         // Shift elements of arr[0...i-1] that are greater than key
-         // to one position ahead of their current position
-         while (j >= 0 && key.compareTo(arr[j]) < 0) {
-            arr[j + 1] = arr[j--];  // Move element to the right
-         }
+            T key = arr[i];      // Store the current element to be compared
+            int j = i - 1;       // Initialize the index of the previous element
 
+            // Shift elements of arr[0...i-1] that are greater than key
+            // to one position ahead of their current position
+            while (j >= 0 && key.compareTo(arr[j]) < 0) {
+                arr[j + 1] = arr[j--];  // Move element to the right
+            }
 
-         // Insert the key into its correct position
-         arr[j + 1] = key;
-
-         addStep(arr);
-      }
-   }
+            // Insert the key into its correct position
+            arr[j + 1] = key;
+        }
+        addStep(arr);
+    }
 }

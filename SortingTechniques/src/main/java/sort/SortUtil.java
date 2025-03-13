@@ -1,8 +1,5 @@
 package sort;
 
-import sort.comparison.ComparisonSortType;
-import sort.noncomparison.NonComparisonSortType;
-
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -40,8 +37,8 @@ public class SortUtil {
      * @return a list of sorting algorithms that support integral types
      */
     public static <E extends Number & Comparable<E>> List<Sort<E>> getIntegralSortingAlgorithms(E instance, Predicate<SortType> filter, boolean showSteps) {
-        return Stream.concat(ComparisonSortType.<E>getSortingAlgorthimsStream(filter, showSteps),
-                NonComparisonSortType.getSortingAlgorthimsStream(instance, filter, showSteps)).toList();
+        return Stream.concat(SortFactory.<E>getNonComparisonSortsStream(filter, showSteps),
+                SortFactory.getComparisonSortsStream(instance, filter, showSteps)).toList();
     }
 
     /**
@@ -53,7 +50,7 @@ public class SortUtil {
      * @return a list of sorting algorithms that support non-integral types
      */
     public static <E extends Comparable<E>> List<Sort<E>> getNonIntegralSortingAlgorithms(Predicate<SortType> filter, boolean showSteps) {
-        return ComparisonSortType.<E>getSortingAlgorthimsStream(filter, showSteps).toList();
+        return SortFactory.<E>getNonComparisonSortsStream(filter, showSteps).toList();
     }
 
     /**
@@ -78,7 +75,7 @@ public class SortUtil {
      * @param <T>   the type of elements in the array, extending {@code Comparable<T>}
      * @return the index of the minimum element from the start index onward
      */
-    public static <T extends Comparable<T>>  int indexOfMin(T[] arr, int start) {
+    public static <T extends Comparable<T>> int indexOfMin(T[] arr, int start) {
         int n = arr.length;
         int index = start;
         for (int i = start; i < n; i++) {

@@ -1,25 +1,25 @@
 package sort.comparison.randomized;
 
-import java.util.Random;
-
 import sort.Sort;
 import sort.SortUtil;
+
+import java.util.Random;
 
 
 /**
  * QuickSort is a highly efficient, comparison-based, divide-and-conquer sorting algorithm.
- * It works by selecting a pivot element from the array and partitioning the other elements 
+ * It works by selecting a pivot element from the array and partitioning the other elements
  * into two sub-arrays: elements smaller than the pivot and elements greater than the pivot.
  * The sub-arrays are then sorted recursively.
  * <p>
- * This implementation uses a randomized pivot selection to improve performance on nearly 
+ * This implementation uses a randomized pivot selection to improve performance on nearly
  * sorted or identical elements, which helps avoid the worst-case scenario.
  * <p>
  * Time Complexity:
  * - Best Case: O(n log n) when the pivot divides the array evenly.
  * - Average Case: O(n log n) for a random distribution of elements.
- * - Worst Case: O(n²) when the smallest or largest element is always selected as the pivot 
- *   (without randomization).
+ * - Worst Case: O(n²) when the smallest or largest element is always selected as the pivot
+ * (without randomization).
  * <p>
  * Space Complexity:
  * - O(log n) due to the recursive stack calls.
@@ -51,8 +51,7 @@ public class QuickSort<T extends Comparable<T>> extends Sort<T> {
         // Select a random pivot index within the range and swap with the rightmost element
         int randomIndex = random.nextInt(left, right + 1);
         SortUtil.swap(arr, randomIndex, right);
-        addStep(arr);
-        
+
         T pivot = arr[right]; // Pivot is now the rightmost element
         int index = left; // Index to place the next smaller element
 
@@ -60,14 +59,12 @@ public class QuickSort<T extends Comparable<T>> extends Sort<T> {
         for (int i = left; i < right; i++) {
             if (arr[i].compareTo(pivot) < 0) {
                 SortUtil.swap(arr, index, i);
-                addStep(arr);
                 index++;
             }
         }
-        
+
         // Place the pivot at its correct position
         SortUtil.swap(arr, index, right);
-        addStep(arr);
         return index;
     }
 
@@ -81,6 +78,8 @@ public class QuickSort<T extends Comparable<T>> extends Sort<T> {
      */
     private void quicksort(T[] arr, int left, int right) {
         if (left < right) {
+            addStep(arr);
+
             // Partition the array and get the pivot index
             int index = partition(arr, left, right);
 
@@ -100,5 +99,6 @@ public class QuickSort<T extends Comparable<T>> extends Sort<T> {
     public void sort(T[] arr) {
         random = new Random(); // Initialize the random number generator
         quicksort(arr, 0, arr.length - 1);
+        addStep(arr);
     }
 }

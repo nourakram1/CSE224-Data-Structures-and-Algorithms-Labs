@@ -42,15 +42,15 @@ public class BubbleSort<T extends Comparable<T>> extends Sort<T> {
             boolean swapped = false;
             for (int j = 0; j < size - i - 1; j++) {
                 if (arr[j].compareTo(arr[j + 1]) > 0) {
+                    addStep(arr);
                     SortUtil.swap(arr, j, j + 1);
                     swapped = true;
-                    addStep(arr);
                 }
             }
             if (!swapped) {
                 break;
             }
         }
+        addStep(arr);
     }
-
 }

@@ -1,5 +1,8 @@
 package sort;
 
+import sort.comparison.ComparisonSortType;
+import sort.noncomparison.NonComparisonSortType;
+
 /**
  * A common interface for sorting algorithm types.
  * <p>
@@ -9,6 +12,14 @@ package sort;
  * </p>
  */
 public interface SortType {
+
+    static SortType getSortType(int code) {
+        try {
+            return ComparisonSortType.getByCode(code);
+        } catch (IllegalArgumentException e) {
+            return NonComparisonSortType.getByCode(code);
+        }
+    }
 
     /**
      * Returns the name of the sorting algorithm.

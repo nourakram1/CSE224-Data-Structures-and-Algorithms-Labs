@@ -1,8 +1,8 @@
 package sort.noncomparison;
 
-import java.util.Arrays;
-
 import sort.Sort;
+
+import java.util.Arrays;
 
 /**
  * Implements the Counting Sort algorithm, an efficient non-comparison-based sorting technique
@@ -52,8 +52,8 @@ public class CountingSort<T extends Number & Comparable<T>> extends Sort<T> {
                 arr[index++] = toT(i + minValue, arr[0]);
             }
         }
-        if(this.showSteps)
-            addStep(arr);
+
+        addStep(arr);
     }
 
     /**

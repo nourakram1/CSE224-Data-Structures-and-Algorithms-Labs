@@ -11,7 +11,7 @@ import sort.SortUtil;
  * @param <T> The type of elements to be sorted, which must extend Comparable.
  */
 public class SelectionSort<T extends Comparable<T>> extends Sort<T> {
-    
+
     public SelectionSort(boolean showSteps) {
         super(showSteps);
     }
@@ -24,10 +24,11 @@ public class SelectionSort<T extends Comparable<T>> extends Sort<T> {
     @Override
     public void sort(T[] arr) {
         int n = arr.length;
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n - 1; i++) {
             addStep(arr);
             int index = SortUtil.indexOfMin(arr, i);
             SortUtil.swap(arr, i, index);
         }
+        addStep(arr);
     }
 }

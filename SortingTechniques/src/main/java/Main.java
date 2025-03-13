@@ -2,7 +2,9 @@ import input.FileReader;
 import input.Parser;
 import sort.Sort;
 import sort.SortFactory;
+import sort.SortType;
 import sort.comparison.ComparisonSortType;
+import sort.noncomparison.NonComparisonSortType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,21 +26,25 @@ public class Main {
         // Parse input
         Integer[] arr = Parser.parseIntegers(inputString, ",");
 
+
         // Display available sorting algorithms
         System.out.println("\nPlease choose one of the following sorting algorithms:");
         for (ComparisonSortType comparisonSortType : ComparisonSortType.values()) {
             System.out.println(comparisonSortType.getCode() + ". " + comparisonSortType.getName());
         }
+        for (NonComparisonSortType nonComparisonSortType : NonComparisonSortType.values()) {
+            System.out.println(nonComparisonSortType.getCode() + ". " + nonComparisonSortType.getName());
+        }
 
         // Get selected algorithm
         Scanner scanner = new Scanner(System.in);
-        ComparisonSortType comparisonSortType = ComparisonSortType.getByCode(Integer.parseInt(scanner.nextLine()));
+        SortType sortType = SortType.getSortType(Integer.parseInt(scanner.nextLine()));
 
         // Display post-sort options
         System.out.println("\nPlease choose one of the following options:");
         System.out.println(
                 "1. Display sorted array\n" +
-                "2. Display intermediate arrays"
+                        "2. Display intermediate arrays"
         );
 
         int displayOption = Integer.parseInt(scanner.nextLine());
@@ -46,7 +52,9 @@ public class Main {
         scanner.close();
 
         // Sort
-        Sort<Integer> sorter = SortFactory.getComparisonSort(comparisonSortType, showSteps);
+        Sort<Integer> sorter = (sortType instanceof ComparisonSortType) ?
+                SortFactory.getComparisonSort((ComparisonSortType) sortType, showSteps)
+                : SortFactory.getNonComparisonSort(0, (NonComparisonSortType) sortType, showSteps);
         sorter.sort(arr);
 
         switch (displayOption) {
@@ -58,13 +66,12 @@ public class Main {
                 int numIntermediateArrays = intermediateArrays.size();
 
                 System.out.println();
-                for (int i = 1; i <= numIntermediateArrays; i++ ) {
+                for (int i = 1; i <= numIntermediateArrays; i++) {
                     System.out.printf("Intermediate Array %d: %s%n", i, Arrays.toString(intermediateArrays.get(i - 1)));
                 }
                 return;
             default:
                 throw new IllegalArgumentException("Invalid display option");
         }
-
     }
 }

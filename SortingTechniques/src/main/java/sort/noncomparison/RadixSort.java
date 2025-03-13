@@ -1,9 +1,9 @@
 package sort.noncomparison;
 
+import sort.Sort;
+
 import java.util.LinkedList;
 import java.util.Queue;
-
-import sort.Sort;
 
 /**
  * Implements the Radix Sort algorithm, a non-comparison-based sorting method that sorts numbers
@@ -48,8 +48,7 @@ public class RadixSort<T extends Number & Comparable<T>> extends Sort<T> {
         for (long place = 1; maxValue / place > 0; place *= BASE) {
             distribute(arr, place);
             collect(arr);
-            if (this.showSteps)
-                addStep(arr);
+            addStep(arr);
         }
     }
 
