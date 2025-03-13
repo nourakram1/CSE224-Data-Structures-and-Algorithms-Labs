@@ -8,6 +8,7 @@ public class Parser {
                                           String delimiter) {
         return Arrays.stream(values.split(delimiter))
                 .map(String::trim)
+                .filter(s -> !s.isEmpty())
                 .map(Integer::valueOf)
                 .toArray(Integer[]::new);
     }
