@@ -24,7 +24,7 @@ public class Main {
         if (inputString == null) return;
 
         // Parse input
-        Integer[] arr = Parser.parseIntegers(inputString, ",");
+        Integer[] arr = Parser.parseValues(inputString, ",", Integer::valueOf, Integer[]::new);
 
 
         // Display available sorting algorithms
