@@ -25,7 +25,7 @@ public class BogoSort<T extends Comparable<T>> extends Sort<T> {
      */
     @Override
     public void sort(T[] arr) {
-        sort(arr, Comparable::compareTo);
+        sort(arr, Comparator.naturalOrder());
     }
 
     /**
