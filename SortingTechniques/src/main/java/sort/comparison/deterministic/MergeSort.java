@@ -3,6 +3,7 @@ package sort.comparison.deterministic;
 import sort.Sort;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -18,14 +19,14 @@ public class MergeSort<T extends Comparable<T>> extends Sort<T> {
     }
 
     /**
-     * Merges two sorted subarrays into a single sorted subarray.
+     * Merges two sorted subarrays into a single sorted subarray using natural ordering.
      *
      * @param arr The original array containing the subarrays.
      * @param l   The starting index of the left subarray.
      * @param m   The middle index separating the subarrays.
      * @param r   The ending index of the right subarray.
      */
-    private void merge(T[] arr, int l, int m, int r) {
+    private void merge(T[] arr, int l, int m, int r, Comparator<T> comparator) {
         addStep(arr);
 
         int i = l;
@@ -33,7 +34,7 @@ public class MergeSort<T extends Comparable<T>> extends Sort<T> {
         List<T> list = new ArrayList<>();
 
         while (i <= m && j <= r) {
-            if (arr[i].compareTo(arr[j]) <= 0) {
+            if (comparator.compare(arr[i], arr[j]) <= 0) {
                 list.add(arr[i++]);
             } else {
                 list.add(arr[j++]);
@@ -55,27 +56,39 @@ public class MergeSort<T extends Comparable<T>> extends Sort<T> {
      * Recursively divides the array into smaller subarrays until each subarray contains one element,
      * then merges them back in sorted order.
      *
-     * @param arr The array to be sorted.
-     * @param l   The leftmost index of the current subarray.
-     * @param r   The rightmost index of the current subarray.
+     * @param arr        The array to be sorted.
+     * @param l          The leftmost index of the current subarray.
+     * @param r          The rightmost index of the current subarray.
+     * @param comparator Comparator defining the sorting order.
      */
-    private void divide(T[] arr, int l, int r) {
+    private void divide(T[] arr, int l, int r, Comparator<T> comparator) {
         if (l < r) {
             int m = (l + r) / 2;
-            divide(arr, l, m);
-            divide(arr, m + 1, r);
-            merge(arr, l, m, r);
+            divide(arr, l, m, comparator);
+            divide(arr, m + 1, r, comparator);
+            merge(arr, l, m, r, comparator);
         }
     }
 
     /**
-     * Sorts the given array using Merge Sort.
+     * Sorts the given array using Merge Sort with natural ordering.
      *
      * @param arr The array to be sorted.
      */
     @Override
     public void sort(T[] arr) {
-        divide(arr, 0, arr.length - 1);
+        sort(arr, Comparator.naturalOrder());
+    }
+
+    /**
+     * Sorts the given array using Merge Sort with a custom comparator.
+     *
+     * @param arr        The array to be sorted.
+     * @param comparator Comparator defining the sorting order.
+     */
+    @Override
+    public void sort(T[] arr, Comparator<T> comparator) {
+        divide(arr, 0, arr.length - 1, comparator);
         addStep(arr);
     }
 }

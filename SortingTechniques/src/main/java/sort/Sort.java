@@ -2,6 +2,7 @@ package sort;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -88,4 +89,6 @@ public abstract class Sort<T extends Comparable<T>> {
             steps.add(Arrays.copyOf(arr, arr.length));
         }
     }
+
+    abstract public void sort(T[] arr, Comparator<T> comparator);
 }

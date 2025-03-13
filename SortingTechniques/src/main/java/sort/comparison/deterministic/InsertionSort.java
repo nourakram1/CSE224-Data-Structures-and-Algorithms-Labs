@@ -1,7 +1,7 @@
 package sort.comparison.deterministic;
 
 import sort.Sort;
-
+import java.util.Comparator;
 
 /**
  * InsertionSort is a simple, comparison-based sorting algorithm that builds the final sorted array
@@ -30,23 +30,33 @@ public class InsertionSort<T extends Comparable<T>> extends Sort<T> {
     }
 
     /**
-     * Sorts the input array using the Insertion Sort algorithm.
+     * Sorts the input array using the Insertion Sort algorithm with natural ordering.
      *
-     * @param arr Array to sort
+     * @param arr Array to sort.
      */
     @Override
     public void sort(T[] arr) {
-        // Iterate through the array starting from the second element
+        sort(arr, Comparator.naturalOrder());
+    }
+
+    /**
+     * Sorts the input array using the Insertion Sort algorithm with a custom comparator.
+     *
+     * @param arr        Array to sort.
+     * @param comparator Comparator defining the sorting order.
+     */
+    @Override
+    public void sort(T[] arr, Comparator<T> comparator) {
         for (int i = 1; i < arr.length; i++) {
             addStep(arr);
 
-            T key = arr[i];      // Store the current element to be compared
-            int j = i - 1;       // Initialize the index of the previous element
+            T key = arr[i];  // Store the current element to be compared
+            int j = i - 1;
 
-            // Shift elements of arr[0...i-1] that are greater than key
-            // to one position ahead of their current position
-            while (j >= 0 && key.compareTo(arr[j]) < 0) {
-                arr[j + 1] = arr[j--];  // Move element to the right
+            // Shift elements that are greater than key to one position ahead of their current position
+            while (j >= 0 && comparator.compare(key, arr[j]) < 0) {
+                arr[j + 1] = arr[j];
+                j--;
             }
 
             // Insert the key into its correct position

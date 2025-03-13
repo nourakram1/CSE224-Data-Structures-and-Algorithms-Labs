@@ -3,6 +3,7 @@ package sort.noncomparison;
 import sort.Sort;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Implements the Counting Sort algorithm, an efficient non-comparison-based sorting technique
@@ -54,6 +55,11 @@ public class CountingSort<T extends Number & Comparable<T>> extends Sort<T> {
         }
 
         addStep(arr);
+    }
+
+    @Override
+    public void sort(T[] arr, Comparator<T> comparator) {
+        throw new UnsupportedOperationException("Counting Sort does not support custom comparators.");
     }
 
     /**

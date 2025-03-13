@@ -3,13 +3,14 @@ package sort.comparison.randomized;
 import sort.Sort;
 import sort.SortUtil;
 
+import java.util.Comparator;
 import java.util.Random;
 
 /**
  * Implementation of the highly inefficient BogoSort algorithm.
  * BogoSort repeatedly shuffles the array until it happens to be sorted.
  *
- * @param <T> The type of elements to be sorted, which must extend Comparable.
+ * @param <T> The type of elements to be sorted, which must implement Comparable<T>.
  */
 public class BogoSort<T extends Comparable<T>> extends Sort<T> {
 
@@ -18,14 +19,24 @@ public class BogoSort<T extends Comparable<T>> extends Sort<T> {
     }
 
     /**
-     * Sorts the given array using BogoSort.
-     * The algorithm repeatedly shuffles the array until it is sorted.
+     * Sorts the given array using BogoSort with natural ordering.
      *
      * @param arr The array to be sorted.
      */
     @Override
     public void sort(T[] arr) {
-        while (!isSorted(arr)) {
+        sort(arr, Comparable::compareTo);
+    }
+
+    /**
+     * Sorts the given array using BogoSort with a custom comparator.
+     *
+     * @param arr        The array to be sorted.
+     * @param comparator Comparator defining the sorting order.
+     */
+    @Override
+    public void sort(T[] arr, Comparator<T> comparator) {
+        while (!isSorted(arr, comparator)) {
             addStep(arr);
             shuffle(arr);
         }
@@ -46,14 +57,15 @@ public class BogoSort<T extends Comparable<T>> extends Sort<T> {
     }
 
     /**
-     * Checks whether the given array is sorted in ascending order.
+     * Checks whether the given array is sorted using the provided comparator.
      *
-     * @param arr The array to check.
+     * @param arr        The array to check.
+     * @param comparator Comparator to determine order.
      * @return {@code true} if the array is sorted, otherwise {@code false}.
      */
-    private boolean isSorted(T[] arr) {
+    private boolean isSorted(T[] arr, Comparator<T> comparator) {
         for (int i = 1; i < arr.length; i++) {
-            if (arr[i].compareTo(arr[i - 1]) < 0) {
+            if (comparator.compare(arr[i], arr[i - 1]) < 0) {
                 return false;
             }
         }

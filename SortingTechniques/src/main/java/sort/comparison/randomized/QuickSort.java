@@ -3,102 +3,107 @@ package sort.comparison.randomized;
 import sort.Sort;
 import sort.SortUtil;
 
+import java.util.Comparator;
 import java.util.Random;
 
-
 /**
- * QuickSort is a highly efficient, comparison-based, divide-and-conquer sorting algorithm.
- * It works by selecting a pivot element from the array and partitioning the other elements
- * into two sub-arrays: elements smaller than the pivot and elements greater than the pivot.
- * The sub-arrays are then sorted recursively.
- * <p>
- * This implementation uses a randomized pivot selection to improve performance on nearly
- * sorted or identical elements, which helps avoid the worst-case scenario.
- * <p>
- * Time Complexity:
- * - Best Case: O(n log n) when the pivot divides the array evenly.
- * - Average Case: O(n log n) for a random distribution of elements.
- * - Worst Case: O(n²) when the smallest or largest element is always selected as the pivot
- * (without randomization).
- * <p>
- * Space Complexity:
- * - O(log n) due to the recursive stack calls.
- * <p>
- * This implementation supports generic types by extending Comparable<T>.
+ * Implementation of the QuickSort algorithm.
+ * This version supports both natural ordering and custom comparators.
  *
  * @param <T> The type of elements to be sorted, must implement Comparable<T>.
  */
 public class QuickSort<T extends Comparable<T>> extends Sort<T> {
-    private Random random;
+
+    private final Random random;
 
     public QuickSort(boolean showSteps) {
         super(showSteps);
+        this.random = new Random();
     }
 
     /**
-     * Partitions the array into two halves around a pivot element.
-     * Elements smaller than the pivot go to the left, and larger elements go to the
-     * right.
-     * The pivot is selected randomly to improve performance on already sorted
-     * arrays.
+     * Sorts the given array using QuickSort with natural ordering.
      *
-     * @param arr   Array to partition
-     * @param left  Left index of the partition range
-     * @param right Right index of the partition range
-     * @return The index of the pivot element after partitioning
+     * @param arr The array to be sorted.
      */
-    private int partition(T[] arr, int left, int right) {
-        // Select a random pivot index within the range and swap with the rightmost element
-        int randomIndex = random.nextInt(left, right + 1);
+    @Override
+    public void sort(T[] arr) {
+        sort(arr, 0, arr.length - 1, Comparator.naturalOrder());
+        addStep(arr);
+    }
+
+    /**
+     * Sorts the given array using QuickSort and a custom comparator.
+     *
+     * @param arr        The array to be sorted.
+     * @param comparator The comparator to determine element order.
+     */
+    @Override
+    public void sort(T[] arr, Comparator<T> comparator) {
+        sort(arr, 0, arr.length - 1, comparator);
+        addStep(arr);
+    }
+
+    /**
+     * Recursive function to perform QuickSort on a portion of the array.
+     *
+     * @param arr        Array to sort.
+     * @param left       Left index of the current partition range.
+     * @param right      Right index of the current partition range.
+     * @param comparator Custom comparator to define sorting order.
+     */
+    private void sort(T[] arr, int left, int right, Comparator<T> comparator) {
+        if (left < right) {
+            addStep(arr);
+
+            // Partition the array and get the pivot index
+            int index = partition(arr, left, right, comparator);
+
+            // Recursively sort the two partitions
+            sort(arr, left, index - 1, comparator);
+            sort(arr, index + 1, right, comparator);
+        }
+    }
+
+    /**
+     * Partitions the array using a randomly selected pivot and the provided comparator.
+     *
+     * @param arr        Array to partition.
+     * @param left       Left index of the partition range.
+     * @param right      Right index of the partition range.
+     * @param comparator Comparator to use for element comparison.
+     * @return The final index of the pivot.
+     */
+    private int partition(T[] arr, int left, int right, Comparator<T> comparator) {
+        int randomIndex = random.nextInt(right - left + 1) + left;
         SortUtil.swap(arr, randomIndex, right);
+        T pivot = arr[right];
+        int index = left;
 
-        T pivot = arr[right]; // Pivot is now the rightmost element
-        int index = left; // Index to place the next smaller element
-
-        // Traverse the array and move elements smaller than the pivot to the left side
         for (int i = left; i < right; i++) {
-            if (arr[i].compareTo(pivot) < 0) {
-                SortUtil.swap(arr, index, i);
+            if (comparator.compare(arr[i], pivot) < 0) {
+                SortUtil.swap(arr, i, index);
                 index++;
             }
         }
 
-        // Place the pivot at its correct position
         SortUtil.swap(arr, index, right);
         return index;
     }
 
     /**
-     * Recursively applies quicksort to partitioned sub arrays.
-     * Uses tail recursion to optimize stack usage.
+     * Helper method to check if an array is sorted.
      *
-     * @param arr   Array to sort
-     * @param left  Left index of the current partition range
-     * @param right Right index of the current partition range
+     * @param arr        The array to check.
+     * @param comparator The comparator for sorting order.
+     * @return True if sorted, false otherwise.
      */
-    private void quicksort(T[] arr, int left, int right) {
-        if (left < right) {
-            addStep(arr);
-
-            // Partition the array and get the pivot index
-            int index = partition(arr, left, right);
-
-            // Recursively sort the left partition
-            quicksort(arr, left, index - 1);
-            // Recursively sort the right partition
-            quicksort(arr, index + 1, right);
+    private boolean isSorted(T[] arr, Comparator<T> comparator) {
+        for (int i = 1; i < arr.length; i++) {
+            if (comparator.compare(arr[i - 1], arr[i]) > 0) {
+                return false;
+            }
         }
-    }
-
-    /**
-     * Sorts the input array using the QuickSort algorithm.
-     *
-     * @param arr Array to sort
-     */
-    @Override
-    public void sort(T[] arr) {
-        random = new Random(); // Initialize the random number generator
-        quicksort(arr, 0, arr.length - 1);
-        addStep(arr);
+        return true;
     }
 }
