@@ -10,9 +10,9 @@ import java.util.Random;
  * Implementation of the highly inefficient BogoSort algorithm.
  * BogoSort repeatedly shuffles the array until it happens to be sorted.
  *
- * @param <T> The type of elements to be sorted, which must implement Comparable<T>.
+ * @param <T> The type of elements to be sorted, which must implement Comparable<? super T>.
  */
-public class BogoSort<T extends Comparable<T>> extends Sort<T> {
+public class BogoSort<T extends Comparable<? super T>> extends Sort<T> {
 
     public BogoSort(boolean showSteps) {
         super(showSteps);
@@ -35,7 +35,7 @@ public class BogoSort<T extends Comparable<T>> extends Sort<T> {
      * @param comparator Comparator defining the sorting order.
      */
     @Override
-    public void sort(T[] arr, Comparator<T> comparator) {
+    public void sort(T[] arr, Comparator<? super T> comparator) {
         while (!isSorted(arr, comparator)) {
             addStep(arr);
             shuffle(arr);
@@ -63,7 +63,7 @@ public class BogoSort<T extends Comparable<T>> extends Sort<T> {
      * @param comparator Comparator to determine order.
      * @return {@code true} if the array is sorted, otherwise {@code false}.
      */
-    private boolean isSorted(T[] arr, Comparator<T> comparator) {
+    private boolean isSorted(T[] arr, Comparator<? super T> comparator) {
         for (int i = 1; i < arr.length; i++) {
             if (comparator.compare(arr[i], arr[i - 1]) < 0) {
                 return false;

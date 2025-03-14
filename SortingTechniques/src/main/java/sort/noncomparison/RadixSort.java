@@ -17,7 +17,7 @@ import java.util.Queue;
  *
  * @param <T> The type of elements to be sorted, which must be a Number and extend Comparable.
  */
-public class RadixSort<T extends Number & Comparable<T>> extends Sort<T> {
+public class RadixSort<T extends Number & Comparable<? super T>> extends Sort<T> {
     private static final int BASE = 10; // The base used for digit extraction (decimal system)
     private final Queue<T>[] positiveBuckets; // Buckets for positive numbers
     private final Queue<T>[] negativeBuckets; // Buckets for negative numbers
@@ -71,7 +71,7 @@ public class RadixSort<T extends Number & Comparable<T>> extends Sort<T> {
      * @param comparator The comparator defining the sort order.
      */
     @Override
-    public void sort(T[] arr, Comparator<T> comparator) {
+    public void sort(T[] arr, Comparator<? super T> comparator) {
         throw new UnsupportedOperationException("RadixSort does not support custom comparators.");
     }
 

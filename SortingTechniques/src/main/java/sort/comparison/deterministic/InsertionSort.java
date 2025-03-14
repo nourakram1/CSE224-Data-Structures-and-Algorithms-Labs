@@ -19,11 +19,11 @@ import java.util.Comparator;
  * Space Complexity:
  * - O(1) since sorting is performed in-place without additional memory usage.
  * <p>
- * This implementation supports generic types by extending Comparable<T>.
+ * This implementation supports generic types by extending Comparable<? super T>.
  *
- * @param <T> The type of elements to be sorted, must implement Comparable<T>.
+ * @param <T> The type of elements to be sorted, must implement Comparable<? super T>.
  */
-public class InsertionSort<T extends Comparable<T>> extends Sort<T> {
+public class InsertionSort<T extends Comparable<? super T>> extends Sort<T> {
 
     public InsertionSort(boolean showSteps) {
         super(showSteps);
@@ -46,7 +46,7 @@ public class InsertionSort<T extends Comparable<T>> extends Sort<T> {
      * @param comparator Comparator defining the sorting order.
      */
     @Override
-    public void sort(T[] arr, Comparator<T> comparator) {
+    public void sort(T[] arr, Comparator<? super T> comparator) {
         for (int i = 1; i < arr.length; i++) {
             addStep(arr);
 

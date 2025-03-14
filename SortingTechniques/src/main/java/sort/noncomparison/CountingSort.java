@@ -11,7 +11,7 @@ import java.util.Comparator;
  *
  * @param <T> The type of elements to be sorted, which must be a Number and extend Comparable.
  */
-public class CountingSort<T extends Number & Comparable<T>> extends Sort<T> {
+public class CountingSort<T extends Number & Comparable<? super T>> extends Sort<T> {
 
     public CountingSort(boolean showSteps) {
         super(showSteps);
@@ -58,7 +58,7 @@ public class CountingSort<T extends Number & Comparable<T>> extends Sort<T> {
     }
 
     @Override
-    public void sort(T[] arr, Comparator<T> comparator) {
+    public void sort(T[] arr, Comparator<? super T> comparator) {
         throw new UnsupportedOperationException("Counting Sort does not support custom comparators.");
     }
 

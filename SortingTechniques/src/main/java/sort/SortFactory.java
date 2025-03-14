@@ -27,10 +27,10 @@ public class SortFactory {
      *
      * @param comparisonSortType the type of comparison-based sorting algorithm.
      * @param showSteps          whether to record intermediate sorting steps.
-     * @param <T>                the type of elements to be sorted, which must implement {@code Comparable<T>}.
+     * @param <T>                the type of elements to be sorted, which must implement {@code Comparable<? super T>}.
      * @return an instance of the specified comparison-based sorting algorithm.
      */
-    public static <T extends Comparable<T>> Sort<T> getComparisonSort(ComparisonSortType comparisonSortType, boolean showSteps) {
+    public static <T extends Comparable<? super T>> Sort<T> getComparisonSort(ComparisonSortType comparisonSortType, boolean showSteps) {
         return switch (comparisonSortType) {
             case ComparisonSortType.HEAPSORT -> new HeapSort<>(showSteps);
             case ComparisonSortType.BUBBLE_SORT -> new BubbleSort<>(showSteps);
@@ -48,11 +48,11 @@ public class SortFactory {
      * @param instance              an instance of the type to be sorted.
      * @param nonComparisonSortType the type of non-comparison-based sorting algorithm.
      * @param showSteps             whether to record intermediate sorting steps.
-     * @param <T>                   the type of elements to be sorted, which must be a subclass of {@code Number} and implement {@code Comparable<T>}.
+     * @param <T>                   the type of elements to be sorted, which must be a subclass of {@code Number} and implement {@code Comparable<? super T>}.
      * @return an instance of the specified non-comparison-based sorting algorithm.
      * @throws IllegalArgumentException if the instance is not of an integral type.
      */
-    public static <T extends Number & Comparable<T>> Sort<T> getNonComparisonSort(Object instance, NonComparisonSortType nonComparisonSortType, boolean showSteps) {
+    public static <T extends Number & Comparable<? super T>> Sort<T> getNonComparisonSort(Object instance, NonComparisonSortType nonComparisonSortType, boolean showSteps) {
         if (!SortUtil.isIntegral(instance)) {
             throw new IllegalArgumentException("Instance is not of integral type");
         }
@@ -71,7 +71,7 @@ public class SortFactory {
      * @param showSteps A boolean flag indicating whether to show the steps of the sorting process.
      * @return A Stream of Sort<T> instances that match the given number type and filter criteria.
      */
-    public static <T extends Number & Comparable<T>> Stream<Sort<T>> getComparisonSortsStream(T instance, Predicate<SortType> filter,
+    public static <T extends Number & Comparable<? super T>> Stream<Sort<T>> getComparisonSortsStream(T instance, Predicate<SortType> filter,
                                                                                               boolean showSteps) {
         return Arrays.stream(NonComparisonSortType.values())
                 .filter(filter)
@@ -86,7 +86,7 @@ public class SortFactory {
      * @param showSteps A boolean flag indicating whether to show the steps of the sorting process.
      * @return A Stream of Sort<T> instances that match the filter criteria.
      */
-    public static <T extends Comparable<T>> Stream<Sort<T>> getNonComparisonSortsStream(Predicate<SortType> filter,
+    public static <T extends Comparable<? super T>> Stream<Sort<T>> getNonComparisonSortsStream(Predicate<SortType> filter,
                                                                                         boolean showSteps) {
         return Arrays.stream(ComparisonSortType.values())
                 .filter(filter)

@@ -20,9 +20,9 @@ import java.util.List;
  * </p>
  *
  * @param <T> the type of elements to be sorted, which must implement
- *            {@code Comparable<T>}.
+ *            {@code Comparable<? super T>}.
  */
-public abstract class Sort<T extends Comparable<T>> {
+public abstract class Sort<T extends Comparable<? super T>> {
 
     /**
      * A list that stores the intermediate states of the array during sorting.
@@ -90,5 +90,5 @@ public abstract class Sort<T extends Comparable<T>> {
         }
     }
 
-    abstract public void sort(T[] arr, Comparator<T> comparator);
+    abstract public void sort(T[] arr, Comparator<? super T> comparator);
 }

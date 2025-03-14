@@ -33,10 +33,10 @@ public class SortUtil {
      * @param instance  an instance of the integral type
      * @param filter    a predicate to filter the sorting algorithms
      * @param showSteps whether to show the sorting steps
-     * @param <E>       the type of elements, extending {@code Number} and {@code Comparable<E>}
+     * @param <E>       the type of elements, extending {@code Number} and {@code Comparable<? super E>}
      * @return a list of sorting algorithms that support integral types
      */
-    public static <E extends Number & Comparable<E>> List<Sort<E>> getIntegralSortingAlgorithms(E instance, Predicate<SortType> filter, boolean showSteps) {
+    public static <E extends Number & Comparable<? super E>> List<Sort<E>> getIntegralSortingAlgorithms(E instance, Predicate<SortType> filter, boolean showSteps) {
         return Stream.concat(SortFactory.<E>getNonComparisonSortsStream(filter, showSteps),
                 SortFactory.getComparisonSortsStream(instance, filter, showSteps)).toList();
     }
@@ -46,10 +46,10 @@ public class SortUtil {
      *
      * @param filter    a predicate to filter the sorting algorithms
      * @param showSteps whether to show the sorting steps
-     * @param <E>       the type of elements, extending {@code Comparable<E>}
+     * @param <E>       the type of elements, extending {@code Comparable<? super E>}
      * @return a list of sorting algorithms that support non-integral types
      */
-    public static <E extends Comparable<E>> List<Sort<E>> getNonIntegralSortingAlgorithms(Predicate<SortType> filter, boolean showSteps) {
+    public static <E extends Comparable<? super E>> List<Sort<E>> getNonIntegralSortingAlgorithms(Predicate<SortType> filter, boolean showSteps) {
         return SortFactory.<E>getNonComparisonSortsStream(filter, showSteps).toList();
     }
 
@@ -59,28 +59,11 @@ public class SortUtil {
      * @param arr    the array in which elements should be swapped
      * @param index1 the index of the first element
      * @param index2 the index of the second element
-     * @param <T>    the type of elements in the array, extending {@code Comparable<T>}
+     * @param <E>    the type of elements in the array, extending {@code Comparable<? super E>}
      */
-    public static <T extends Comparable<T>> void swap(T[] arr, int index1, int index2) {
-        T temp = arr[index1];
+    public static <E extends Comparable<? super E>> void swap(E[] arr, int index1, int index2) {
+        E temp = arr[index1];
         arr[index1] = arr[index2];
         arr[index2] = temp;
-    }
-
-    /**
-     * Finds the index of the smallest element in an array starting from a given index.
-     *
-     * @param arr   the array to search
-     * @param start the starting index for the search
-     * @param <T>   the type of elements in the array, extending {@code Comparable<T>}
-     * @return the index of the minimum element from the start index onward
-     */
-    public static <T extends Comparable<T>> int indexOfMin(T[] arr, int start) {
-        int n = arr.length;
-        int index = start;
-        for (int i = start; i < n; i++) {
-            if (arr[i].compareTo(arr[index]) < 0) index = i;
-        }
-        return index;
     }
 }

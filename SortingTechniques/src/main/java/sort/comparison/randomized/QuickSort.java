@@ -10,9 +10,9 @@ import java.util.Random;
  * Implementation of the QuickSort algorithm.
  * This version supports both natural ordering and custom comparators.
  *
- * @param <T> The type of elements to be sorted, must implement Comparable<T>.
+ * @param <T> The type of elements to be sorted, must implement Comparable<? super T>.
  */
-public class QuickSort<T extends Comparable<T>> extends Sort<T> {
+public class QuickSort<T extends Comparable<? super T>> extends Sort<T> {
 
     private final Random random;
 
@@ -39,7 +39,7 @@ public class QuickSort<T extends Comparable<T>> extends Sort<T> {
      * @param comparator The comparator to determine element order.
      */
     @Override
-    public void sort(T[] arr, Comparator<T> comparator) {
+    public void sort(T[] arr, Comparator<? super T> comparator) {
         sort(arr, 0, arr.length - 1, comparator);
         addStep(arr);
     }
@@ -52,7 +52,7 @@ public class QuickSort<T extends Comparable<T>> extends Sort<T> {
      * @param right      Right index of the current partition range.
      * @param comparator Custom comparator to define sorting order.
      */
-    private void sort(T[] arr, int left, int right, Comparator<T> comparator) {
+    private void sort(T[] arr, int left, int right, Comparator<? super T> comparator) {
         if (left < right) {
             addStep(arr);
 
@@ -74,7 +74,7 @@ public class QuickSort<T extends Comparable<T>> extends Sort<T> {
      * @param comparator Comparator to use for element comparison.
      * @return The final index of the pivot.
      */
-    private int partition(T[] arr, int left, int right, Comparator<T> comparator) {
+    private int partition(T[] arr, int left, int right, Comparator<? super T> comparator) {
         int randomIndex = random.nextInt(right - left + 1) + left;
         SortUtil.swap(arr, randomIndex, right);
         T pivot = arr[right];
@@ -89,21 +89,5 @@ public class QuickSort<T extends Comparable<T>> extends Sort<T> {
 
         SortUtil.swap(arr, index, right);
         return index;
-    }
-
-    /**
-     * Helper method to check if an array is sorted.
-     *
-     * @param arr        The array to check.
-     * @param comparator The comparator for sorting order.
-     * @return True if sorted, false otherwise.
-     */
-    private boolean isSorted(T[] arr, Comparator<T> comparator) {
-        for (int i = 1; i < arr.length; i++) {
-            if (comparator.compare(arr[i - 1], arr[i]) > 0) {
-                return false;
-            }
-        }
-        return true;
     }
 }

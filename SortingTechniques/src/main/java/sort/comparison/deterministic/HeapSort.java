@@ -12,7 +12,7 @@ import java.util.Comparator;
  *
  * @param <T> The type of elements to be sorted, which must extend Comparable.
  */
-public class HeapSort<T extends Comparable<T>> extends Sort<T> {
+public class HeapSort<T extends Comparable<? super T>> extends Sort<T> {
 
     public HeapSort(boolean showSteps) {
         super(showSteps);
@@ -35,7 +35,7 @@ public class HeapSort<T extends Comparable<T>> extends Sort<T> {
      * @param comparator The comparator defining the sorting order.
      */
     @Override
-    public void sort(T[] arr, Comparator<T> comparator) {
+    public void sort(T[] arr, Comparator<? super T> comparator) {
         int n = arr.length;
 
         // Build the heap
@@ -59,7 +59,7 @@ public class HeapSort<T extends Comparable<T>> extends Sort<T> {
      * @param i          The index of the root of the subtree.
      * @param comparator The comparator defining the sorting order.
      */
-    private void heapify(T[] arr, int n, int i, Comparator<T> comparator) {
+    private void heapify(T[] arr, int n, int i, Comparator<? super T> comparator) {
         int largest = i;  // Assume root as largest
         int left = 2 * i + 1;
         int right = 2 * i + 2;

@@ -17,11 +17,11 @@ import java.util.Comparator;
  * <p><b>Space Complexity:</b></p>
  * - O(1) since sorting is performed in-place without additional memory usage.
  *
- * <p>This implementation supports generic types by extending Comparable<T>.</p>
+ * <p>This implementation supports generic types by extending Comparable<? super T>.</p>
  *
- * @param <T> The type of elements to be sorted, must implement Comparable<T>.
+ * @param <T> The type of elements to be sorted, must implement Comparable<? super T>.
  */
-public class BubbleSort<T extends Comparable<T>> extends Sort<T> {
+public class BubbleSort<T extends Comparable<? super T>> extends Sort<T> {
 
     public BubbleSort(boolean showSteps) {
         super(showSteps);
@@ -44,7 +44,7 @@ public class BubbleSort<T extends Comparable<T>> extends Sort<T> {
      * @param comparator The comparator defining the sorting order.
      */
     @Override
-    public void sort(T[] arr, Comparator<T> comparator) {
+    public void sort(T[] arr, Comparator<? super T> comparator) {
         int size = arr.length;
         for (int i = 0; i < size - 1; i++) {
             boolean swapped = false;

@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @param <T> The type of elements to be sorted, which must extend Comparable.
  */
-public class MergeSort<T extends Comparable<T>> extends Sort<T> {
+public class MergeSort<T extends Comparable<? super T>> extends Sort<T> {
 
     public MergeSort(boolean showSteps) {
         super(showSteps);
@@ -26,7 +26,7 @@ public class MergeSort<T extends Comparable<T>> extends Sort<T> {
      * @param m   The middle index separating the subarrays.
      * @param r   The ending index of the right subarray.
      */
-    private void merge(T[] arr, int l, int m, int r, Comparator<T> comparator) {
+    private void merge(T[] arr, int l, int m, int r, Comparator<? super T> comparator) {
         addStep(arr);
 
         int i = l;
@@ -61,7 +61,7 @@ public class MergeSort<T extends Comparable<T>> extends Sort<T> {
      * @param r          The rightmost index of the current subarray.
      * @param comparator Comparator defining the sorting order.
      */
-    private void divide(T[] arr, int l, int r, Comparator<T> comparator) {
+    private void divide(T[] arr, int l, int r, Comparator<? super T> comparator) {
         if (l < r) {
             int m = (l + r) / 2;
             divide(arr, l, m, comparator);
@@ -87,7 +87,7 @@ public class MergeSort<T extends Comparable<T>> extends Sort<T> {
      * @param comparator Comparator defining the sorting order.
      */
     @Override
-    public void sort(T[] arr, Comparator<T> comparator) {
+    public void sort(T[] arr, Comparator<? super T> comparator) {
         divide(arr, 0, arr.length - 1, comparator);
         addStep(arr);
     }

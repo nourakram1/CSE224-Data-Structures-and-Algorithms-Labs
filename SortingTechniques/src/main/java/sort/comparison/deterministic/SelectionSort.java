@@ -9,9 +9,9 @@ import java.util.Comparator;
  * Implements the Selection Sort algorithm, which repeatedly selects the smallest (or largest) element
  * from the unsorted portion of the array and swaps it with the first unsorted element.
  *
- * @param <T> The type of elements to be sorted, which must implement Comparable<T>.
+ * @param <T> The type of elements to be sorted, which must implement Comparable<? super T>.
  */
-public class SelectionSort<T extends Comparable<T>> extends Sort<T> {
+public class SelectionSort<T extends Comparable<? super T>> extends Sort<T> {
 
     public SelectionSort(boolean showSteps) {
         super(showSteps);
@@ -34,7 +34,7 @@ public class SelectionSort<T extends Comparable<T>> extends Sort<T> {
      * @param comparator Comparator defining the sorting order.
      */
     @Override
-    public void sort(T[] arr, Comparator<T> comparator) {
+    public void sort(T[] arr, Comparator<? super T> comparator) {
         int n = arr.length;
 
         for (int i = 0; i < n - 1; i++) {
