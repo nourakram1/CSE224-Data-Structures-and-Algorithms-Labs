@@ -14,11 +14,9 @@ import java.util.List;
 public class WeightedDigraph implements Graph {
 
     /** The total number of vertices in the graph. */
-    @Getter
     private final int vertices;
 
     /** The total number of edges in the graph. */
-    @Getter
     private int edges;
 
     /**
@@ -74,8 +72,19 @@ public class WeightedDigraph implements Graph {
      */
     public void addEdge(DirectedEdge edge) {
         validateVertex(edge.source());
+        validateVertex(edge.target());
         this.edges++;
         this.adjacencyList[edge.source()].add(edge);
+    }
+
+    @Override
+    public int numberOfVertices() {
+        return this.vertices;
+    }
+
+    @Override
+    public int numberOfEdges() {
+        return this.edges;
     }
 
     /**
@@ -85,7 +94,7 @@ public class WeightedDigraph implements Graph {
      * @return a list of outgoing directed edges
      * @throws IllegalArgumentException if {@code vertex} is out of range
      */
-    public List<DirectedEdge> adjacentVertices(int vertex) {
+    public List<DirectedEdge> outEdges(int vertex) {
         validateVertex(vertex);
         return adjacencyList[vertex];
     }
@@ -115,7 +124,7 @@ public class WeightedDigraph implements Graph {
      *
      * @return a list containing all edges in the graph
      */
-    public List<DirectedEdge> edges() {
+    public List<DirectedEdge> edgeList() {
         List<DirectedEdge> edgeList = new LinkedList<>();
         for (int i = 0; i < vertices; i++) {
             edgeList.addAll(adjacencyList[i]);

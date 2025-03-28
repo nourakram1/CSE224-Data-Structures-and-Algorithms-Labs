@@ -23,7 +23,7 @@ import java.util.*;
  * <p>
  * Subclasses must implement the {@code computeShortestPaths()} method to define the specific algorithm logic.
  */
-public abstract class ShortestPathFinder {
+public abstract class SingleSourceShortestPathFinder {
 
     /** Stores the last edge in the shortest path from the source to each vertex. */
     protected DirectedEdge[] edgeTo;
@@ -45,16 +45,17 @@ public abstract class ShortestPathFinder {
      * @param source the source vertex from which shortest paths are computed
      * @throws IllegalArgumentException if {@code source} is out of valid range
      */
-    public ShortestPathFinder(Graph graph, int source) {
+    public SingleSourceShortestPathFinder(Graph graph, int source) {
         if (graph == null) {
             throw new IllegalArgumentException("Graph cannot be null.");
         }
-        if (source < 0 || source >= graph.getVertices()) {
+        if (source < 0 || source >= graph.numberOfVertices()) {
             throw new IllegalArgumentException("Source vertex " + source + " is out of bounds.");
         }
+
         this.graph = graph;
         this.source = source;
-        int V = graph.getVertices();
+        int V = graph.numberOfVertices();
         this.distTo = new double[V];
         this.edgeTo = new DirectedEdge[V];
         Arrays.fill(distTo, Double.POSITIVE_INFINITY);
@@ -79,9 +80,8 @@ public abstract class ShortestPathFinder {
         int target = edge.target();
         double weight = edge.weight();
 
-        // Ensure the source has been discovered before using it
         if (distTo[source] == Double.POSITIVE_INFINITY) {
-            return false; // Source vertex has not been reached yet
+            return false;
         }
 
         double newDist = distTo[source] + weight;
@@ -94,20 +94,6 @@ public abstract class ShortestPathFinder {
     }
 
     /**
-     * Returns the shortest known distance from the source vertex to the specified vertex.
-     *
-     * @param vertex the destination vertex
-     * @return the shortest distance from the source to the given vertex, or {@code Double.POSITIVE_INFINITY} if unreachable
-     * @throws IllegalArgumentException if {@code vertex} is out of valid range
-     */
-    public double distTo(int vertex) {
-        if (vertex < 0 || vertex >= graph.getVertices()) {
-            throw new IllegalArgumentException("Vertex " + vertex + " is out of bounds.");
-        }
-        return distTo[vertex];
-    }
-
-    /**
      * Returns the shortest path from the source vertex to the specified vertex.
      * If no path exists, an empty list is returned.
      *
@@ -117,18 +103,17 @@ public abstract class ShortestPathFinder {
      * @throws IllegalArgumentException if {@code vertex} is out of valid range
      */
     public List<DirectedEdge> pathTo(int vertex) {
-        if (vertex < 0 || vertex >= graph.getVertices()) {
+        if (vertex < 0 || vertex >= graph.numberOfVertices()) {
             throw new IllegalArgumentException("Vertex " + vertex + " is out of bounds.");
         }
         if (distTo[vertex] == Double.POSITIVE_INFINITY) {
-            return Collections.emptyList(); // No path exists
+            return Collections.emptyList();
         }
 
-        List<DirectedEdge> path = new ArrayList<>();
+        Stack<DirectedEdge> path = new Stack<>();
         for (DirectedEdge edge = edgeTo[vertex]; edge != null; edge = edgeTo[edge.source()]) {
-            path.add(edge);
+            path.push(edge);
         }
-        Collections.reverse(path); // Reverse to get correct order (source → destination)
         return path;
     }
 }

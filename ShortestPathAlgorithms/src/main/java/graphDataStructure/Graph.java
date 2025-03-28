@@ -37,21 +37,21 @@ public interface Graph {
      *
      * @return the number of vertices in the graph
      */
-    int getVertices();
+    int numberOfVertices();
 
     /**
      * Returns the total number of edges in the graph.
      *
      * @return the number of edges in the graph
      */
-    int getEdges();
+    int numberOfEdges();
 
     /**
      * Returns a list of all directed edges in the graph.
      *
      * @return a list containing all edges in the graph
      */
-    List<DirectedEdge> edges();
+    List<DirectedEdge> edgeList();
 
     /**
      * Returns a list of directed edges originating from the specified vertex.
@@ -62,5 +62,5 @@ public interface Graph {
      * @return a list of directed edges starting from the given vertex
      * @throws IllegalArgumentException if {@code vertex} is out of range
      */
-    List<DirectedEdge> adjacentVertices(int vertex);
+    List<DirectedEdge> outEdges(int vertex);
 }

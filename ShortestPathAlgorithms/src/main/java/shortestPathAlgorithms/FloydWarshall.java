@@ -5,12 +5,11 @@ import graphDataStructure.Graph;
 
 import java.util.Arrays;
 
-public class FloydWarshall extends ShortestPathFinder {
+public class FloydWarshall {
     private final double[][] dist;
 
     public FloydWarshall(Graph graph) {
-        super(graph, -1);
-        int n = graph.getVertices();
+        int n = graph.numberOfVertices();
         dist = new double[n][n];
 
         for (int i = 0; i < n; i++) {
@@ -18,14 +17,13 @@ public class FloydWarshall extends ShortestPathFinder {
             dist[i][i] = 0;
         }
 
-        for (DirectedEdge edge : graph.edges()) {
+        for (DirectedEdge edge : graph.edgeList()) {
             dist[edge.source()][edge.target()] = edge.weight();
         }
 
         computeShortestPaths();
     }
 
-    @Override
     protected void computeShortestPaths() {
         //TODO
     }
