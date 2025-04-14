@@ -16,11 +16,16 @@ public class Dijkstra extends SingleSourceShortestPathFinder {
 
     @Override
     protected void computeShortestPaths() {
+        boolean[] visited = new boolean[graph.numberOfVertices()];
         pq.add(this.source);
-        while(!pq.isEmpty()) {
+
+        while (!pq.isEmpty()) {
             int currentNode = pq.poll();
-            for(DirectedEdge edge : graph.outEdges(currentNode)) {
-                if(relaxEdge(edge)) {
+            if (visited[currentNode]) continue;
+            visited[currentNode] = true;
+
+            for (DirectedEdge edge : graph.outEdges(currentNode)) {
+                if (relaxEdge(edge)) {
                     pq.add(edge.target());
                 }
             }

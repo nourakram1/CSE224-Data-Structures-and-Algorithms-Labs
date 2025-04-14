@@ -17,21 +17,28 @@ public class BellmanFord extends SingleSourceShortestPathFinder {
 
     @Override
     protected void computeShortestPaths() {
-        for (int i = 0; i < graph.numberOfVertices() - 1; i++) {
-            boolean relaxed = false;
-            for (DirectedEdge edge : edgeList) {
-                relaxed = relaxed || relaxEdge(edge);
-                if (!relaxed) break;
-            }
+        int V = graph.numberOfVertices();
 
+        for (int i = 0; i < V - 1; i++) {
+            boolean anyRelaxed = false;
             for (DirectedEdge edge : edgeList) {
                 if (relaxEdge(edge)) {
-                    this.hasNegativeCycle = true;
-                    break;
+                    anyRelaxed = true;
                 }
+            }
+            if (!anyRelaxed) {
+                break;
+            }
+        }
+
+        for (DirectedEdge edge : edgeList) {
+            if (relaxEdge(edge)) {
+                hasNegativeCycle = true;
+                break;
             }
         }
     }
+
 
     public boolean hasNegativeCycle() {
         return hasNegativeCycle;
