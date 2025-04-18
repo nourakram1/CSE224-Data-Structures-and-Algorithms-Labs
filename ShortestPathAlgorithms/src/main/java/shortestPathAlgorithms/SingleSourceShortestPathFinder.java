@@ -29,7 +29,7 @@ public abstract class SingleSourceShortestPathFinder {
     protected DirectedEdge[] edgeTo;
 
     /** Stores the shortest known distance from the source vertex to each vertex. */
-    protected double[] distTo;
+    public double[] distTo;
 
     /** The directed graph on which the shortest path algorithm operates. */
     protected Graph graph;
@@ -103,17 +103,15 @@ public abstract class SingleSourceShortestPathFinder {
      * @throws IllegalArgumentException if {@code vertex} is out of valid range
      */
     public List<DirectedEdge> pathTo(int vertex) {
-        if (vertex < 0 || vertex >= graph.numberOfVertices()) {
+        if (vertex < 0 || vertex >= graph.numberOfVertices())
             throw new IllegalArgumentException("Vertex " + vertex + " is out of bounds.");
-        }
-        if (distTo[vertex] == Double.POSITIVE_INFINITY) {
+        if (distTo[vertex] == Double.POSITIVE_INFINITY)
             return Collections.emptyList();
-        }
 
-        Stack<DirectedEdge> path = new Stack<>();
-        for (DirectedEdge edge = edgeTo[vertex]; edge != null; edge = edgeTo[edge.source()]) {
-            path.push(edge);
+        Deque<DirectedEdge> path = new ArrayDeque<>();
+        for (DirectedEdge e = edgeTo[vertex]; e != null; e = edgeTo[e.source()]) {
+            path.addFirst(e);
         }
-        return path;
+        return new ArrayList<>(path);
     }
 }

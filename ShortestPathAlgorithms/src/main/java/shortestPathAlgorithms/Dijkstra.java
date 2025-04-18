@@ -16,15 +16,15 @@ public class Dijkstra extends SingleSourceShortestPathFinder {
 
     @Override
     protected void computeShortestPaths() {
-        boolean[] visited = new boolean[graph.numberOfVertices()];
         pq.add(this.source);
 
         while (!pq.isEmpty()) {
             int currentNode = pq.poll();
-            if (visited[currentNode]) continue;
-            visited[currentNode] = true;
 
             for (DirectedEdge edge : graph.outEdges(currentNode)) {
+                if(edge.weight() < 0) {
+                    throw new IllegalArgumentException("Dijkstra's algorithm does not work with negative edges, edge with weight = " + edge.weight() + " is detected.");
+                }
                 if (relaxEdge(edge)) {
                     pq.add(edge.target());
                 }
