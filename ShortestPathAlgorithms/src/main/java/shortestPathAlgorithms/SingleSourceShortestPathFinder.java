@@ -1,9 +1,14 @@
 package shortestPathAlgorithms;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.List;
+
 import graphDataStructure.DirectedEdge;
 import graphDataStructure.Graph;
-
-import java.util.*;
 
 /**
  * An abstract class providing a framework for shortest path algorithms in a weighted directed graph.
@@ -118,4 +123,9 @@ public abstract class SingleSourceShortestPathFinder {
         }
         return new ArrayList<>(path);
     }
+
+public DirectedEdge[] getEdgeTo() {
+        return edgeTo;
+    }
+
 }

@@ -9,6 +9,7 @@ import shortestPathAlgorithms.BellmanFord;
 import shortestPathAlgorithms.Dijkstra;
 import shortestPathAlgorithms.FloydWarshall;
 
+
 class SubMenu1 implements Menu {
 
     @Override
@@ -29,10 +30,8 @@ class SubMenu1 implements Menu {
                 case 1:
                     Dijkstra dijkstra = new Dijkstra(graph, source);
                     System.out.println("Shortest path from source to all other nodes: ");
-                    for (int i = 0; i < graph.numberOfVertices(); i++) {
-                        List<DirectedEdge> path = dijkstra.pathTo(i);
-                        System.out.println("Path to " + i + ": " + path);
-                    }
+                    SPTVisualizer printer = new SPTVisualizer();
+                    printer.printShortestPathTree(dijkstra.getEdgeTo(), source);
                     System.out.println("Choose an optional:");
                     System.out.println("1. The Cost of the Shortest Path");
                     System.out.println("2. The Shortest Path from the Source to the Target Vertex");
@@ -62,10 +61,8 @@ class SubMenu1 implements Menu {
                 case 2:
                     BellmanFord bellmanFord = new BellmanFord(graph, source);
                     System.out.println("Shortest path from source to all other nodes: ");
-                    for (int i = 0; i < graph.numberOfVertices(); i++) {
-                        List<DirectedEdge> path = bellmanFord.pathTo(i);
-                        System.out.println("Path to " + i + ": " + path);
-                    }
+                    printer = new SPTVisualizer();
+                    printer.printShortestPathTree(bellmanFord.getEdgeTo(), source);
                     System.out.println("Choose an optional:");
                     System.out.println("1. The Cost of the Shortest Path");
                     System.out.println("2. The Shortest Path from the Source to the Target Vertex");
