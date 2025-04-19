@@ -6,23 +6,7 @@ import menu.MainMenu;
 
 public class Main {
     public static void main(String[] args) {
-//        Graph g = new WeightedDigraph(4);
-//
-//        g.addEdge(new DirectedEdge(1, 2, 10));
-//        g.addEdge(new DirectedEdge(2, 1, 4));
-//        g.addEdge(2, 0, 10.0);
-//        g.addEdge(2, 3, 77);
-//
-//        Dijkstra x = new Dijkstra(g, 1);
-//        List<DirectedEdge> y = x.pathTo(3);
-//
-//        System.out.println(y);
-
-
-//        if (args.length == 0) {
-//            System.out.println("Usage: java Main <path_to_graph_file>");
-//            return;
-//        }
+        System.out.println("Welcome to the Shortest Path Algorithms Program!");
         System.out.print("Enter file path: ");
         Scanner scan = new Scanner(System.in);
         String filePath= scan.nextLine();
@@ -35,12 +19,20 @@ public class Main {
         if (graph != null) {
             System.out.println("Graph successfully loaded!");
             System.out.println(graph);
-
-            new MainMenu().showMenu(graph);
-
+            try {
+                new MainMenu().showMenu(graph);
+            } catch (Exception e) {
+                System.out.println("An error occurred while processing the graph: " + e.getMessage());
+            } finally {
+                scan.close();
+            }
+            
+            
         } else {
             System.out.println("Failed to load the graph.");
         }
-        
+
+
+
     }
 }
