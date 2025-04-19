@@ -1,22 +1,18 @@
 import graphDataStructure.DirectedEdge;
 import graphDataStructure.Graph;
 import graphDataStructure.WeightedDigraph;
-import shortestPathAlgorithms.BellmanFord;
-import shortestPathAlgorithms.Dijkstra;
-import shortestPathAlgorithms.FloydWarshall;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.renderer.category.CategoryItemRenderer;
-import org.jfree.chart.ChartUtils;
 import org.jfree.data.category.DefaultCategoryDataset;
+import shortestPathAlgorithms.BellmanFord;
+import shortestPathAlgorithms.Dijkstra;
+import shortestPathAlgorithms.FloydWarshall;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class ShortestPathBenchmarkPlotter {
@@ -24,47 +20,91 @@ public class ShortestPathBenchmarkPlotter {
 
     public static void main(String[] args) {
         int[] sizes = {50, 100, 200, 300, 400, 500, 600, 700, 800};
-        double[] densities = {0.2, 0.5, 0.8, 1};
+        double[] densities = {0.1};
         int trials = 3;
 
-        Map<String, DefaultCategoryDataset> datasets = new HashMap<>();
-        datasets.put("single-source", new DefaultCategoryDataset());
-        datasets.put("all-pairs", new DefaultCategoryDataset());
+        Map<Double, DefaultCategoryDataset> singleSourceDatasets = new HashMap<>();
+        Map<Double, DefaultCategoryDataset> allPairsDatasets = new HashMap<>();
+
+        for (double density : densities) {
+            singleSourceDatasets.put(density, new DefaultCategoryDataset());
+            allPairsDatasets.put(density, new DefaultCategoryDataset());
+        }
 
         for (int size : sizes) {
             for (double density : densities) {
-                Graph g = generateRandomGraph(size, density);
-                int source = 0;
+                DefaultCategoryDataset ssDataset = singleSourceDatasets.get(density);
+                DefaultCategoryDataset apDataset = allPairsDatasets.get(density);
 
-                // --- Bellman-Ford ---
-                long bfSingle = averageTime(trials, () -> new BellmanFord(g, source));
-                datasets.get("single-source").addValue(bfSingle, "BellmanFord (d=" + density + ")", size + "");
+                double bfSSAvg = 0, bfAPAvg = 0, djSSAvg = 0, djAPAvg = 0, fwAvg = 0;
 
-                long bfAll = averageTime(trials, () -> {
+                for (int t = 0; t < trials; t++) {
+                    Graph g = generateRandomGraph(size, density);
+                    int source = 0;
+
+                    // Bellman-Ford single-source
+                    long t1 = System.nanoTime();
+                    new BellmanFord(g, source);
+                    long t2 = System.nanoTime();
+                    bfSSAvg += (t2 - t1) / 1e6;
+
+                    // Bellman-Ford all-pairs
+                    t1 = System.nanoTime();
                     for (int i = 0; i < size; i++) new BellmanFord(g, i);
-                });
-                datasets.get("all-pairs").addValue(bfAll, "BellmanFord (d=" + density + ")", size + "");
+                    t2 = System.nanoTime();
+                    bfAPAvg += (t2 - t1) / 1e6;
 
-                // --- Dijkstra ---
-                long dijSingle = averageTime(trials, () -> new Dijkstra(g, source));
-                datasets.get("single-source").addValue(dijSingle, "Dijkstra (d=" + density + ")", size + "");
+                    // Dijkstra single-source
+                    t1 = System.nanoTime();
+                    new Dijkstra(g, source);
+                    t2 = System.nanoTime();
+                    djSSAvg += (t2 - t1) / 1e6;
 
-                long dijAll = averageTime(trials, () -> {
+                    // Dijkstra all-pairs
+                    t1 = System.nanoTime();
                     for (int i = 0; i < size; i++) new Dijkstra(g, i);
-                });
-                datasets.get("all-pairs").addValue(dijAll, "Dijkstra (d=" + density + ")", size + "");
+                    t2 = System.nanoTime();
+                    djAPAvg += (t2 - t1) / 1e6;
 
-                // --- Floyd-Warshall (only small graphs) ---
-                if (size <= 200) {
-                    long fwAll = averageTime(trials, () -> new FloydWarshall(g));
-                    datasets.get("all-pairs").addValue(fwAll, "FloydWarshall (d=" + density + ")", size + "");
+                    // Floyd-Warshall all-pairs only
+                    t1 = System.nanoTime();
+                    new FloydWarshall(g);
+                    t2 = System.nanoTime();
+                    fwAvg += (t2 - t1) / 1e6;
                 }
+
+                // Take the average
+                bfSSAvg /= trials;
+                bfAPAvg /= trials;
+                djSSAvg /= trials;
+                djAPAvg /= trials;
+                fwAvg /= trials;
+
+                String sizeStr = size + "";
+                ssDataset.addValue(bfSSAvg, "Bellman-Ford", sizeStr);
+                ssDataset.addValue(djSSAvg, "Dijkstra", sizeStr);
+
+                apDataset.addValue(bfAPAvg, "Bellman-Ford", sizeStr);
+                apDataset.addValue(djAPAvg, "Dijkstra", sizeStr);
+                apDataset.addValue(fwAvg, "Floyd-Warshall", sizeStr);
             }
         }
 
+        // Show charts per density and save as PNG
         SwingUtilities.invokeLater(() -> {
-            showChart(datasets.get("single-source"), "Single-Source Shortest Path Timing", "Graph Size", "Time (ms)");
-            showChart(datasets.get("all-pairs"), "All-Pairs Shortest Path Timing", "Graph Size", "Time (ms)");
+            for (double density : densities) {
+                DefaultCategoryDataset ssDataset = singleSourceDatasets.get(density);
+                DefaultCategoryDataset apDataset = allPairsDatasets.get(density);
+
+                // Show and save charts as PNG
+                showAndSaveChart(ssDataset,
+                        "Single-Source Shortest Path (Density = " + density + ")",
+                        "Graph Size", "Time (ms)", "single_source_" + density + ".png");
+
+                showAndSaveChart(apDataset,
+                        "All-Pairs Shortest Path (Density = " + density + ")",
+                        "Graph Size", "Time (ms)", "all_pairs_" + density + ".png");
+            }
         });
     }
 
@@ -85,54 +125,26 @@ public class ShortestPathBenchmarkPlotter {
         return g;
     }
 
-    private static long averageTime(int trials, Runnable algorithm) {
-        long totalTime = 0;
-        for (int i = 0; i < trials; i++) {
-            long t1 = System.nanoTime();
-            algorithm.run();
-            long t2 = System.nanoTime();
-            totalTime += (t2 - t1);
-        }
-        return totalTime / trials / 1_000_000; // return in milliseconds
-    }
-
-    private static void showChart(DefaultCategoryDataset dataset, String title, String xLabel, String yLabel) {
+    private static void showAndSaveChart(DefaultCategoryDataset dataset, String title, String xLabel, String yLabel, String fileName) {
         JFreeChart chart = ChartFactory.createLineChart(
-                title,
-                xLabel,
-                yLabel,
-                dataset,
-                PlotOrientation.VERTICAL,
-                true, true, false
+                title, xLabel, yLabel, dataset,
+                PlotOrientation.VERTICAL, true, true, false
         );
 
-        // Enhance plot appearance
-        chart.setBackgroundPaint(Color.WHITE);
-        chart.getTitle().setFont(new Font("SansSerif", Font.BOLD, 18));
-        chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 14));
-
-        CategoryPlot plot = chart.getCategoryPlot();
-        plot.setBackgroundPaint(new Color(240, 240, 240));
-        plot.setRangeGridlinePaint(Color.GRAY);
-        plot.setOutlineVisible(false);
-
-        CategoryItemRenderer renderer = plot.getRenderer();
-        for (int i = 0; i < dataset.getRowCount(); i++) {
-            renderer.setSeriesStroke(i, new BasicStroke(2.0f));
-        }
-
-        // Display chart in window
+        // Show the chart in a JFrame
         JFrame frame = new JFrame(title);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(new ChartPanel(chart));
-        frame.setSize(1000, 600);
+        frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        // Optionally save chart as PNG (uncomment if desired)
+        // Save the chart as a PNG file
         try {
-            ChartUtils.saveChartAsPNG(new File(title.replaceAll("\\s+", "_") + ".png"), chart, 1000, 600);
-        } catch (Exception e) {
+            File outputFile = new File(fileName);
+            org.jfree.chart.ChartUtils.saveChartAsPNG(outputFile, chart, 800, 600);
+            System.out.println("Chart saved as " + outputFile.getAbsolutePath());
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
