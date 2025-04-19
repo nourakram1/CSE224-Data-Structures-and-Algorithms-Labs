@@ -29,7 +29,7 @@ public abstract class SingleSourceShortestPathFinder {
     protected DirectedEdge[] edgeTo;
 
     /** Stores the shortest known distance from the source vertex to each vertex. */
-    public double[] distTo;
+    private final double[] distTo;
 
     /** The directed graph on which the shortest path algorithm operates. */
     protected Graph graph;
@@ -91,6 +91,10 @@ public abstract class SingleSourceShortestPathFinder {
             return true;
         }
         return false;
+    }
+
+    public double distTo(int v) {
+        return distTo[v];
     }
 
     /**

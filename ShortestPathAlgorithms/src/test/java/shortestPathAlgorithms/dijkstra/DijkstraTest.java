@@ -23,10 +23,10 @@ class DijkstraTest {
         g.addEdge(new DirectedEdge(1, 3, 5));
 
         Dijkstra d = new Dijkstra(g, 0);
-        assertEquals(0.0, d.distTo[0], EPS);
-        assertEquals(1.0, d.distTo[1], EPS);
-        assertEquals(3.0, d.distTo[2], EPS);
-        assertEquals(4.0, d.distTo[3], EPS);
+        assertEquals(0.0, d.distTo(0), EPS);
+        assertEquals(1.0, d.distTo(1), EPS);
+        assertEquals(3.0, d.distTo(2), EPS);
+        assertEquals(4.0, d.distTo(3), EPS);
     }
 
     @Test
@@ -51,7 +51,7 @@ class DijkstraTest {
         g.addEdge(new DirectedEdge(2, 3, 1));
 
         Dijkstra d = new Dijkstra(g, 0);
-        assertEquals(Double.POSITIVE_INFINITY, d.distTo[2]);
+        assertEquals(Double.POSITIVE_INFINITY, d.distTo(2));
         assertTrue(d.pathTo(2).isEmpty());
     }
 
@@ -62,7 +62,7 @@ class DijkstraTest {
         g.addEdge(new DirectedEdge(0, 1, 5));
 
         Dijkstra d = new Dijkstra(g, 0);
-        assertEquals(5.0, d.distTo[1], EPS);
+        assertEquals(5.0, d.distTo(1), EPS);
     }
 
     @Test
@@ -71,7 +71,7 @@ class DijkstraTest {
         g.addEdge(new DirectedEdge(0, 0, 10));
 
         Dijkstra d = new Dijkstra(g, 0);
-        assertEquals(0.0, d.distTo[0], EPS);
+        assertEquals(0.0, d.distTo(0), EPS);
         assertTrue(d.pathTo(0).isEmpty());
     }
 
@@ -82,8 +82,8 @@ class DijkstraTest {
         g.addEdge(new DirectedEdge(1, 2, 2));
 
         Dijkstra d = new Dijkstra(g, 0);
-        assertEquals(0.0, d.distTo[1], EPS);
-        assertEquals(2.0, d.distTo[2], EPS);
+        assertEquals(0.0, d.distTo(1), EPS);
+        assertEquals(2.0, d.distTo(2), EPS);
     }
 
     @Test
@@ -114,7 +114,7 @@ class DijkstraTest {
     void testSingleNodeGraph() {
         Graph g = new WeightedDigraph(1);
         Dijkstra d = new Dijkstra(g, 0);
-        assertEquals(0.0, d.distTo[0], EPS);
+        assertEquals(0.0, d.distTo(0), EPS);
         assertTrue(d.pathTo(0).isEmpty());
     }
 
@@ -129,7 +129,7 @@ class DijkstraTest {
         g.addEdge(new DirectedEdge(1, 3, 2));
 
         Dijkstra d = new Dijkstra(g, 0);
-        assertEquals(3.0, d.distTo[3], EPS);
+        assertEquals(3.0, d.distTo(3), EPS);
         List<DirectedEdge> path = d.pathTo(3);
         assertEquals(2, path.size());
         assertEquals("0 -> 1 -> 3", pathToString(path, 3));
@@ -144,7 +144,7 @@ class DijkstraTest {
         g.addEdge(new DirectedEdge(2, 3, 2));
 
         Dijkstra d = new Dijkstra(g, 0);
-        assertEquals(3.0, d.distTo[3], EPS);
+        assertEquals(3.0, d.distTo(3), EPS);
         String p = pathToString(d.pathTo(3), 3);
         assertTrue(p.equals("0 -> 1 -> 3") || p.equals("0 -> 2 -> 3"));
     }
@@ -161,7 +161,7 @@ class DijkstraTest {
         g.addEdge(new DirectedEdge(2, 4, 6));
 
         Dijkstra d = new Dijkstra(g, 0);
-        assertEquals(7.0, d.distTo[4], EPS);
+        assertEquals(7.0, d.distTo(4), EPS);
         assertEquals("0 -> 1 -> 3 -> 4", pathToString(d.pathTo(4), 4));
     }
 
@@ -173,7 +173,7 @@ class DijkstraTest {
             g.addEdge(new DirectedEdge(i, i + 1, 1));
         }
         Dijkstra d = new Dijkstra(g, 0);
-        assertEquals(n - 1, d.distTo[n - 1], EPS);
+        assertEquals(n - 1, d.distTo(n- 1), EPS);
         assertEquals(n - 1, d.pathTo(n - 1).size());
     }
 

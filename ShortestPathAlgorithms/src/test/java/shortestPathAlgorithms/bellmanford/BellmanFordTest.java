@@ -24,10 +24,10 @@ class BellmanFordTest {
 
         BellmanFord bf = new BellmanFord(g, 0);
         assertFalse(bf.hasNegativeCycle());
-        assertEquals(0.0, bf.distTo[0], EPS);
-        assertEquals(1.0, bf.distTo[1], EPS);
-        assertEquals(3.0, bf.distTo[2], EPS);
-        assertEquals(4.0, bf.distTo[3], EPS);
+        assertEquals(0.0, bf.distTo(0), EPS);
+        assertEquals(1.0, bf.distTo(1), EPS);
+        assertEquals(3.0, bf.distTo(2), EPS);
+        assertEquals(4.0, bf.distTo(3), EPS);
     }
 
     @Test
@@ -53,7 +53,7 @@ class BellmanFordTest {
 
         BellmanFord bf = new BellmanFord(g, 0);
         assertFalse(bf.hasNegativeCycle());
-        assertEquals(Double.POSITIVE_INFINITY, bf.distTo[2]);
+        assertEquals(Double.POSITIVE_INFINITY, bf.distTo(2));
         assertTrue(bf.pathTo(2).isEmpty());
     }
 
@@ -64,7 +64,7 @@ class BellmanFordTest {
 
         BellmanFord bf = new BellmanFord(g, 0);
         assertFalse(bf.hasNegativeCycle());
-        assertEquals(-5.0, bf.distTo[1], EPS);
+        assertEquals(-5.0, bf.distTo(1), EPS);
     }
 
     @Test
@@ -85,7 +85,7 @@ class BellmanFordTest {
         g.addEdge(new DirectedEdge(0, 1, 5));
 
         BellmanFord bf = new BellmanFord(g, 0);
-        assertEquals(5.0, bf.distTo[1], EPS);
+        assertEquals(5.0, bf.distTo(1), EPS);
     }
 
     @Test
@@ -95,7 +95,7 @@ class BellmanFordTest {
 
         BellmanFord bf = new BellmanFord(g, 0);
         assertFalse(bf.hasNegativeCycle());
-        assertEquals(0.0, bf.distTo[0], EPS);
+        assertEquals(0.0, bf.distTo(0), EPS);
     }
 
     @Test
@@ -105,7 +105,7 @@ class BellmanFordTest {
 
         BellmanFord bf = new BellmanFord(g, 0);
         assertFalse(bf.hasNegativeCycle());
-        assertEquals(0.0, bf.distTo[0], EPS);
+        assertEquals(0.0, bf.distTo(0), EPS);
     }
 
     @Test
@@ -131,7 +131,7 @@ class BellmanFordTest {
         Graph g = new WeightedDigraph(1);
         BellmanFord bf = new BellmanFord(g, 0);
         assertFalse(bf.hasNegativeCycle());
-        assertEquals(0.0, bf.distTo[0], EPS);
+        assertEquals(0.0, bf.distTo(0), EPS);
         assertTrue(bf.pathTo(0).isEmpty());
     }
 
@@ -146,7 +146,7 @@ class BellmanFordTest {
         g.addEdge(new DirectedEdge(1, 3, 2));
 
         BellmanFord bf = new BellmanFord(g, 0);
-        assertEquals(3.0, bf.distTo[3], EPS);
+        assertEquals(3.0, bf.distTo(3), EPS);
         List<DirectedEdge> path = bf.pathTo(3);
         assertEquals(2, path.size());
         assertEquals("0 -> 1 -> 3", pathToString(path, 3));
@@ -161,7 +161,7 @@ class BellmanFordTest {
         g.addEdge(new DirectedEdge(2, 3, 2));
 
         BellmanFord bf = new BellmanFord(g, 0);
-        assertEquals(3.0, bf.distTo[3], EPS);
+        assertEquals(3.0, bf.distTo(3), EPS);
         String p = pathToString(bf.pathTo(3), 3);
         assertTrue(p.equals("0 -> 1 -> 3") || p.equals("0 -> 2 -> 3"));
     }
@@ -178,7 +178,7 @@ class BellmanFordTest {
         g.addEdge(new DirectedEdge(2, 4, 6));
 
         BellmanFord bf = new BellmanFord(g, 0);
-        assertEquals(7.0, bf.distTo[4], EPS);
+        assertEquals(7.0, bf.distTo(4), EPS);
         assertEquals("0 -> 1 -> 3 -> 4", pathToString(bf.pathTo(4), 4));
     }
 
@@ -190,7 +190,7 @@ class BellmanFordTest {
             g.addEdge(new DirectedEdge(i, i + 1, 1));
         }
         BellmanFord bf = new BellmanFord(g, 0);
-        assertEquals(n - 1, bf.distTo[n - 1], EPS);
+        assertEquals(n - 1, bf.distTo(n- 1), EPS);
         assertEquals(n - 1, bf.pathTo(n - 1).size());
     }
 

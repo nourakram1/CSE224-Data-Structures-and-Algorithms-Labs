@@ -10,7 +10,7 @@ public class Dijkstra extends SingleSourceShortestPathFinder {
 
     public Dijkstra(Graph graph, int source) {
         super(graph, source);
-        pq = new PriorityQueue<>(Comparator.comparingDouble(v -> distTo[v]));
+        pq = new PriorityQueue<>(Comparator.comparingDouble(this::distTo));
         computeShortestPaths();
     }
 

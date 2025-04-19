@@ -1,53 +1,27 @@
-import graphDataStructure.DirectedEdge;
 import graphDataStructure.Graph;
 import graphDataStructure.WeightedDigraph;
-import input.Input;
 import shortestPathAlgorithms.Dijkstra;
 import shortestPathAlgorithms.SingleSourceShortestPathFinder;
 
-import java.util.List;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-//        Graph g = new WeightedDigraph(4);
-//
-//        g.addEdge(new DirectedEdge(1, 2, 10));
-//        g.addEdge(new DirectedEdge(2, 1, 4));
-//        g.addEdge(2, 0, 10.0);
-//        g.addEdge(2, 3, 77);
-//
-//        Dijkstra x = new Dijkstra(g, 1);
-//        List<DirectedEdge> y = x.pathTo(3);
-//
-//        System.out.println(y);
+        Graph g = new WeightedDigraph(7);
 
+        g.addEdge(0, 1, 2);
+        g.addEdge(0, 2, 7);
+        g.addEdge(0, 4, 12);
+        g.addEdge(1, 3, 2);
+        g.addEdge(2, 1, 3);
+        g.addEdge(2, 3, -1);
+        g.addEdge(2, 4, 2);
+        g.addEdge(3, 5, 2);
+        g.addEdge(4, 6, -7);
+        g.addEdge(4, 0, -4);
+        g.addEdge(5, 6, 2);
+        g.addEdge(6, 3, 1);
 
-//        if (args.length == 0) {
-//            System.out.println("Usage: java Main <path_to_graph_file>");
-//            return;
-//        }
-        System.out.print("Enter file path: ");
-        Scanner scan = new Scanner(System.in);
-        String filePath= scan.nextLine();
-
-        Input file = new Input();
-        Graph graph = file.readFile(filePath);
-
-
-
-        if (graph != null) {
-            System.out.println("Graph successfully loaded!");
-            System.out.println(graph);
-            Dijkstra x = new Dijkstra(graph, 0);
-            List<DirectedEdge> y = x.pathTo(3);
-
-            System.out.println(y);
-        } else {
-            System.out.println("Failed to load the graph.");
-        }
-
-
-
+        // A0 B1 C2 D3 E4 F5 G6
+        SingleSourceShortestPathFinder x = new Dijkstra(g, 0);
     }
 }
