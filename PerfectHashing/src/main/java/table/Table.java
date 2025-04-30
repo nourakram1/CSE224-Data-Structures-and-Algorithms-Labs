@@ -43,7 +43,7 @@ public interface Table<T> {
     boolean contains(T value);
 
     /**
-     * Inserts all of the elements in the given list into the table.
+     * Inserts all the elements in the given list into the table.
      * Only elements that are not already present will be added.
      *
      * @param values a list of elements to be inserted
@@ -55,7 +55,7 @@ public interface Table<T> {
     }
 
     /**
-     * Removes all of the elements in the given list from the table.
+     * Removes all the elements in the given list from the table.
      * Only elements that are present will be removed.
      *
      * @param values a list of elements to be removed

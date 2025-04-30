@@ -2,13 +2,14 @@ package table;
 
 import hash.UniversalHash;
 import representation.BinaryRepresentable;
+import util.ListUtils;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+import java.util.Objects;
 
 public class HashTable<T extends BinaryRepresentable> extends AbstractHashTable<T> {
+    private static final int DEFAULT_CAPACITY = 4;
     private final List<T> elements;
 
     public HashTable(int binaryRepresentationLength) {
@@ -16,31 +17,30 @@ public class HashTable<T extends BinaryRepresentable> extends AbstractHashTable<
     }
 
     public HashTable(int initialCapacity, int binaryRepresentationLength) {
-        super(binaryRepresentationLength);
-        capacity = initialCapacity;
-        elements = new ArrayList<>(Collections.nCopies(initialCapacity, null));
+        super(initialCapacity, binaryRepresentationLength);
+        elements = ListUtils.arrayList(initialCapacity);
     }
 
     @Override
     public boolean insert(T value) {
-        ensureUniversalHash();
-        if (size * size > capacity)
-            grow();
-        boolean inserted = set(getHashCode(value), value);
+        Objects.requireNonNull(value);
+        boolean inserted = insert(universalHash.getHashCode(value), value);
         if (inserted) size++;
         return inserted;
     }
 
     @Override
     public boolean remove(T value) {
-        boolean removed = set(getHashCode(value), null);
+        Objects.requireNonNull(value);
+        boolean removed = remove(universalHash.getHashCode(value));
         if (removed) size--;
         return removed;
     }
 
     @Override
     public boolean contains(T value) {
-        return elements.get(getHashCode(value)) != null;
+        Objects.requireNonNull(value);
+        return elements.get(universalHash.getHashCode(value)) != null;
     }
 
     @Override
@@ -48,45 +48,52 @@ public class HashTable<T extends BinaryRepresentable> extends AbstractHashTable<
         return Collections.unmodifiableList(elements);
     }
 
-    private boolean set(int index, T value) {
-        T oldValue = elements.get(index);
-        if (oldValue != null) {
-            if (!oldValue.equals(value))
-                rehash(capacity);
-            else return false;
-        }
-        elements.set(index, value);
+    private boolean remove(int index) {
+        T oldValue = elements.set(index, null);
+        return oldValue != null;
+    }
+
+    private boolean insert(int index, T value) {
+        T t = elements.get(index);
+        if (value.equals(t)) return false;
+
+        if (size * size > capacity)
+            grow();
+
+        if (t != null)
+            rehash();
+
+        elements.set(universalHash.getHashCode(value), value);
         return true;
     }
 
-    private void rehash(int capacity) {
-        UniversalHash newUniversalHash = new UniversalHash(capacity, BINARY_REPRESENTATION_LENGTH);
-        List<T> newElements = new ArrayList<>(Collections.nCopies(capacity, null));
-        for (int i = 0; i < size; i++) {
-            T t = elements.get(i);
-            int hashCode = getHashCode(t, newUniversalHash);
-            if (newElements.get(hashCode) != null) {
-                i = -1;
-                Collections.fill(newElements, null);
-                newUniversalHash = new UniversalHash(capacity, BINARY_REPRESENTATION_LENGTH);
-            }
-            else {
-                newElements.set(hashCode, t);
-            }
-        }
-        universalHash = newUniversalHash;
-    }
-
     private void grow() {
-        updateCapacity(size * size);
-        rehash(capacity);
+        capacity *= 2;
+        ListUtils.ensureSize(elements, capacity);
+        rehash();
     }
 
-    private void updateCapacity(int newCapacity) {
-        capacity = newCapacity;
-        List<T> newElements = new ArrayList<>(Collections.nCopies(capacity, null));
-        Collections.copy(elements, newElements);
-        elements.clear();
-        elements.addAll(newElements);
+    private void rehash() {
+        UniversalHash<T> hash;
+        List<T> elements = ListUtils.arrayList(capacity);
+        boolean collision;
+
+        do {
+            hash = new UniversalHash<>(capacity, BINARY_REPRESENTATION_LENGTH);
+            collision = false;
+
+            for (T element : ListUtils.nonNull(elements)) {
+                int hashCode = hash.getHashCode(element);
+                if (elements.get(hashCode) != null) {
+                    collision = true;
+                    ListUtils.nullOut(elements);
+                    break;
+                }
+                elements.set(hashCode, element);
+            }
+        } while (collision);
+
+        universalHash = hash;
+        ListUtils.replaceWith(this.elements, elements);
     }
 }

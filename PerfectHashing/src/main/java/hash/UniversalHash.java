@@ -1,11 +1,13 @@
 package hash;
 
+import representation.BinaryRepresentable;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class UniversalHash {
+public class UniversalHash<T extends BinaryRepresentable> {
     private final int BINARY_LENGTH;
     private final int blocks;
     private final List<BigInteger> h;
@@ -21,7 +23,8 @@ public class UniversalHash {
         }
     }
 
-    public int hash(String binaryRepresentation) {
+    public int getHashCode(T value) {
+        String binaryRepresentation = value.getBinaryRepresentation();
         if (binaryRepresentation.length() != this.BINARY_LENGTH)
             throw new IllegalArgumentException("Invalid Binary Representation Length.");
 
@@ -36,12 +39,9 @@ public class UniversalHash {
     }
 
     private int ceilLog2(int n) {
-        if (n <= 0) {
+        if (n <= 0)
             throw new IllegalArgumentException("n must be positive");
-        }
-        // if n is already a power of two, we want exactly log2(n),
-        // otherwise we want the next integer.
-        // (n - 1) shifts any power‐of‐two boundary down to the previous block.
+
         return 32 - Integer.numberOfLeadingZeros(n - 1);
     }
 }

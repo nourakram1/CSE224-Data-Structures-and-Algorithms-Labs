@@ -25,20 +25,4 @@ public interface BinaryRepresentable {
      * value in binary form, with consistent length across instances
      */
     String getBinaryRepresentation();
-
-    /**
-     * Returns the fixed length of the binary representation produced by
-     * {@link #getBinaryRepresentation()}.
-     * <p>
-     * Since every implementation of this interface must return strings
-     * of the same length, this method simply delegates to
-     * {@code getBinaryRepresentation().length()}.
-     * </p>
-     *
-     * @return the number of characters in the binary representation string
-     * @see #getBinaryRepresentation()
-     */
-    default int getBinaryRepresentationLength() {
-        return getBinaryRepresentation().length();
-    }
 }
