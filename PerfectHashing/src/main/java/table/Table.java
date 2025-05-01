@@ -15,6 +15,7 @@ import java.util.List;
  * @param <T> the type of elements maintained by this table
  */
 public interface Table<T> {
+
     /**
      * Inserts the specified element into the table if it is not already present.
      *
