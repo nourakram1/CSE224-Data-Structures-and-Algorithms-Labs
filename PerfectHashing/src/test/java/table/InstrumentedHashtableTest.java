@@ -35,6 +35,5 @@ public class InstrumentedHashtableTest
             System.out.printf("Number of grows: %d%n", totalGrowCount);
             System.out.printf("Number of rehashes: %d%n", totalRehashCount);
         }
-        table.getUniversalHash();
     }
 }
