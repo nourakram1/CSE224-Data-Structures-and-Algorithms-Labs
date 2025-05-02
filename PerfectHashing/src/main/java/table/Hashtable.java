@@ -22,25 +22,26 @@ public class Hashtable<T extends BinaryRepresentable>
     }
 
     @Override
-    protected boolean remove(int hashCode, T value) {
-        T t = elements.get(hashCode);
-        if (!value.equals(t)) return false;
-        elements.set(hashCode, null);
-        return true;
-    }
-
-    @Override
     protected boolean insert(int hashCode, T value) {
-        T t = elements.get(hashCode);
-        if (value.equals(t)) return false;
+        if (contains(hashCode, value))
+            return false;
 
         if (size * size >= capacity)
             grow();
 
-        while (elements.get(universalHash.getHashCode(value)) != null)
+        while (collision(value))
             rehash();
 
         elements.set(universalHash.getHashCode(value), value);
+        return true;
+    }
+
+    @Override
+    protected boolean remove(int hashCode, T value) {
+        if (!contains(hashCode, value))
+            return false;
+
+        elements.set(hashCode, null);
         return true;
     }
 
@@ -54,33 +55,43 @@ public class Hashtable<T extends BinaryRepresentable>
         return ListUtils.nonNull(elements);
     }
 
-    private void grow() {
+    protected void grow() {
         capacity *= 2;
         ListUtils.ensureSize(elements, capacity);
         rehash();
     }
 
-    private void rehash() {
-        UniversalHash<T> hash;
-        List<T> elements = ListUtils.arrayList(capacity);
-        boolean collision;
+    protected void rehash() {
+        List<T> elements = getElements();
+        UniversalHash<T> universalHash = getUniversalHash();
+        List<T> hashed = hash(elements, universalHash);
 
-        do {
-            hash = new UniversalHash<>(capacity, BINARY_REPRESENTATION_LENGTH);
-            collision = false;
+        while (hashed == null) {
+            universalHash = getUniversalHash();
+            hashed = hash(elements, universalHash);
+        }
 
-            for (T element : getElements()) {
-                int hashCode = hash.getHashCode(element);
-                if (elements.get(hashCode) != null) {
-                    collision = true;
-                    ListUtils.nullOut(elements);
-                    break;
-                }
-                elements.set(hashCode, element);
-            }
-        } while (collision);
+        this.universalHash = universalHash;
+        ListUtils.replaceWith(this.elements, hashed);
+    }
 
-        universalHash = hash;
-        ListUtils.replaceWith(this.elements, elements);
+    protected List<T> hash(List<T> elements, UniversalHash<T> universalHash) {
+        List<T> hashed = ListUtils.arrayList(capacity);
+
+        for (T element : getElements()) {
+            int hashCode = universalHash.getHashCode(element);
+            if (hashed.get(hashCode) != null)
+                return null;
+
+            hashed.set(hashCode, element);
+        }
+
+        return hashed;
+    }
+
+    protected boolean collision(T value) {
+        int hashCode = universalHash.getHashCode(value);
+        T t = elements.get(hashCode);
+        return t != null && !t.equals(value);
     }
 }

@@ -35,12 +35,13 @@ public interface ListUtils {
         list.addAll(with);
     }
 
-    static <T> List<T> nonNull(List<T> list) {
-        return list.stream().filter(Objects::nonNull).toList();
+    static <T> void replaceWith(List<T> list, int capacity, Supplier<T> supplier) {
+        list.clear();
+        list.addAll(Stream.generate(supplier).limit(capacity).toList());
     }
 
-    static <T> void nullOut(List<T> list) {
-        Collections.fill(list, null);
+    static <T> List<T> nonNull(List<T> list) {
+        return list.stream().filter(Objects::nonNull).toList();
     }
 
     static <T> List<T> unique(List<T> list) {

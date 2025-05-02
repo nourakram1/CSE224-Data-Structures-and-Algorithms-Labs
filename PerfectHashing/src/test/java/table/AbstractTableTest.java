@@ -1,7 +1,8 @@
 package table;
 
 import factory.Factory;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import util.ListUtils;
 
 import java.util.Collections;
@@ -10,86 +11,85 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractTableTest<S, T extends Table<S>> {
-
-    protected static final int INITIAL_CAPACITY = 21;
-    private final Factory<S> factory;
     
+    protected static final int REPEAT_COUNT = 50;
+    
+    private final Factory<S> factory;
+    protected T table;
+    protected static final int INITIAL_TABLE_CAPACITY = 21;
+
     AbstractTableTest(final Factory<S> factory) {
         this.factory = factory;
     }
     
     protected T createTable() {
-        return createTable(INITIAL_CAPACITY);
+        return createTable(INITIAL_TABLE_CAPACITY);
     }
 
     protected abstract T createTable(int capacity);
 
-    @Test
+    @BeforeEach
+    void setUp() {
+        table = createTable();
+    }
+
+    @RepeatedTest(REPEAT_COUNT)
     void testInsert() {
-        T table = createTable();
         S stub = factory.createInstance();
         assertTrue(table.insert(stub), "Insert should return true.");
     }
 
-    @Test
+    @RepeatedTest(REPEAT_COUNT)
     void testDuplicateInsert() {
-        T table = createTable();
         S stub = factory.createInstance();
         table.insert(stub);
         assertFalse(table.insert(stub), "Duplicate insert should return false.");
     }
 
-    @Test
+    @RepeatedTest(REPEAT_COUNT)
     void testRemove() {
-        T table = createTable();
         S stub = factory.createInstance();
         table.insert(stub);
         assertTrue(table.remove(stub), "Remove should return true.");
     }
 
-    @Test
+    @RepeatedTest(REPEAT_COUNT)
     void testDuplicateRemove() {
-        T table = createTable();
         S stub = factory.createInstance();
         table.insert(stub);
         table.remove(stub);
         assertFalse(table.remove(stub), "Duplicate remove should return false.");
     }
 
-    @Test
+    @RepeatedTest(REPEAT_COUNT)
     void testRemoveNonExistent() {
-        T table = createTable();
         S stub = factory.createInstance();
         assertFalse(table.remove(stub), "Remove should return false.");
     }
 
-    @Test
+    @RepeatedTest(REPEAT_COUNT)
     void testContains() {
-        T table = createTable();
         S stub = factory.createInstance();
         table.insert(stub);
         assertTrue(table.contains(stub), "Contains should return true.");
     }
 
-    @Test
+    @RepeatedTest(REPEAT_COUNT)
     void testContainsNonExistent() {
-        T table = createTable();
         S stub = factory.createInstance();
         assertFalse(table.contains(stub), "Contains should return false.");
     }
 
-    @Test
+    @RepeatedTest(REPEAT_COUNT)
     void testInsertAllUnique() {
-        T table = createTable();
         List<S> stubs = factory.createUniqueInstances();
         List<S> inserted = table.insertAll(stubs);
         assertTrue(ListUtils.haveSameElements(stubs, inserted),
                 "Insert all unique elements should return the same elements.");
     }
 
-    @Test
+    @RepeatedTest(REPEAT_COUNT)
     void testInsertAllWithDuplicates() {
-        T table = createTable();
         List<S> uniqueStubs = factory.createUniqueInstances();
         List<S> duplicateStubs = factory.createDuplicateInstances(uniqueStubs);
         List<S> inserted = table.insertAll(duplicateStubs);
@@ -97,17 +97,15 @@ public abstract class AbstractTableTest<S, T extends Table<S>> {
                 "Insert all with duplicates elements should return only the unique elements.");
     }
 
-    @Test
+    @RepeatedTest(REPEAT_COUNT)
     void testInsertAllWithEmptyList() {
-        T table = createTable();
         List<S> inserted = table.insertAll(Collections.emptyList());
         assertTrue(inserted.isEmpty(),
                 "Insert all elements of an empty list should return an empty list.");
     }
 
-    @Test
+    @RepeatedTest(REPEAT_COUNT)
     void testRemoveAllUnique() {
-        T table = createTable();
         List<S> stubs = factory.createUniqueInstances();
         table.insertAll(stubs);
         List<S> removed = table.removeAll(stubs);
@@ -115,9 +113,8 @@ public abstract class AbstractTableTest<S, T extends Table<S>> {
                 "Remove all unique elements should return the same elements.");
     }
 
-    @Test
+    @RepeatedTest(REPEAT_COUNT)
     void removeAllWithDuplicates() {
-        T table = createTable();
         List<S> uniqueStubs = factory.createUniqueInstances();
         List<S> duplicateStubs = factory.createDuplicateInstances(uniqueStubs);
         table.insertAll(duplicateStubs);
@@ -126,26 +123,24 @@ public abstract class AbstractTableTest<S, T extends Table<S>> {
                 "Remove all with duplicates elements should return only the inserted elements.");
     }
 
-    @Test
+    @RepeatedTest(REPEAT_COUNT)
     void testRemoveAllWithEmptyList() {
-        T table = createTable();
         List<S> removed = table.insertAll(Collections.emptyList());
         assertTrue(removed.isEmpty(),
                 "Remove all elements of an empty list should return an empty list.");
     }
 
-    @Test
+    @RepeatedTest(REPEAT_COUNT)
     void testGetElements() {
-        T table = createTable();
         List<S> uniqueStubs = factory.createUniqueInstances();
         table.insertAll(uniqueStubs);
         List<S> elements = table.getElements();
         assertTrue(ListUtils.haveSameElements(elements, uniqueStubs));
     }
 
-    @Test
+    @RepeatedTest(REPEAT_COUNT)
     void testGrow() {
-        T table = createTable(2);
+        this.table = createTable(2);
         List<S> uniqueStubs = factory.createUniqueInstances();
         assertEquals(uniqueStubs.size(), table.insertAll(uniqueStubs).size(),
                 "Hashtable should grow to accommodate all insertions.");

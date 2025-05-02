@@ -54,16 +54,20 @@ public abstract class AbstractHashtable<T extends BinaryRepresentable>
         return values.stream().filter(this::remove).toList();
     }
 
-    abstract protected boolean insert(int hashCode, T value);
+    protected abstract boolean insert(int hashCode, T value);
 
-    abstract protected boolean remove(int hashCode, T value);
+    protected abstract boolean remove(int hashCode, T value);
 
-    abstract protected boolean contains(int hashCode,T value);
+    protected abstract boolean contains(int hashCode,T value);
 
     protected void ensureUniversalHash(int binaryRepresentationLength) {
         if (universalHash == null) {
-            universalHash = new UniversalHash<>(capacity, binaryRepresentationLength);
             BINARY_REPRESENTATION_LENGTH = binaryRepresentationLength;
+            this.universalHash = getUniversalHash();
         }
+    }
+
+    protected UniversalHash<T> getUniversalHash() {
+        return new UniversalHash<>(capacity, BINARY_REPRESENTATION_LENGTH);
     }
 }
