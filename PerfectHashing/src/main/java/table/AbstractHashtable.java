@@ -1,10 +1,10 @@
 package table;
 
+import java.util.List;
+
 import hash.UniversalHash;
 import representation.BinaryRepresentable;
 import util.MathUtils;
-
-import java.util.List;
 
 public abstract class AbstractHashtable<T extends BinaryRepresentable>
         implements Table<T> {
