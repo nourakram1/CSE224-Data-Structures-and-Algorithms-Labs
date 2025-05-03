@@ -1,10 +1,12 @@
-package SpacePlotter;
+package Plotting.SpacePlotting;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import Plotting.ChartPlotter;
+import Plotting.Dummy;
 import table.Hashtable;
 import table.HierarchicalHashtable;
 
@@ -24,13 +26,13 @@ public class SpacePlottingMain {
         DeepSizeMeasurer measurer = new DeepSizeMeasurer();
         List<Double> perfect = measurer.measure(ns, n -> {
             Hashtable<Dummy> ht = new Hashtable<>(n);
-            List<Dummy> dummies = createDummies(n);
+            List<Dummy> dummies = Dummy.createDummies(n, BINLEN);
             ht.insertAll(dummies);
             return ht;
         });
         List<Double> hierarchical = measurer.measure(ns, n -> {
             HierarchicalHashtable<Dummy> hht = new HierarchicalHashtable<>(n);
-            List<Dummy> dummies = createDummies(n);
+            List<Dummy> dummies = Dummy.createDummies(n, BINLEN);
             hht.insertAll(dummies);
             return hht;
         });
@@ -42,11 +44,5 @@ public class SpacePlottingMain {
                 "Memory Usage (MB)",
                 "Number of Elements Inserted (n)", "Size (MB)",
                 "hashTables_space_comparison.png");
-    }
-
-    private static List<Dummy> createDummies(int n) {
-        return IntStream.range(0, n)
-                .mapToObj(i -> new Dummy(i, BINLEN))
-                .collect(Collectors.toList());
     }
 }

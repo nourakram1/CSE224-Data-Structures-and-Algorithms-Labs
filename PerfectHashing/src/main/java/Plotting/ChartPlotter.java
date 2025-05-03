@@ -1,4 +1,4 @@
-package SpacePlotter;
+package Plotting;
 
 import java.io.File;
 import java.io.IOException;

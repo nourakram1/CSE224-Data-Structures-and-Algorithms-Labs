@@ -1,4 +1,4 @@
-package SpacePlotter;
+package Plotting.SpacePlotting;
 
 @FunctionalInterface
 public interface TableFactory {

@@ -1,4 +1,4 @@
-package SpacePlotter;
+package Plotting.SpacePlotting;
 
 import java.util.List;
 import java.util.stream.Collectors;

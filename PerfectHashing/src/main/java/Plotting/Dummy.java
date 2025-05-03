@@ -1,4 +1,8 @@
-package SpacePlotter;
+package Plotting;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import representation.BinaryRepresentable;
 
@@ -24,5 +28,11 @@ public class Dummy implements BinaryRepresentable {
     @Override
     public int hashCode() {
         return Integer.hashCode(id);
+    }
+
+    public static List<Dummy> createDummies(int n, int binlen) {
+        return IntStream.range(0, n)
+                .mapToObj(i -> new Dummy(i, binlen))
+                .collect(Collectors.toList());
     }
 }
