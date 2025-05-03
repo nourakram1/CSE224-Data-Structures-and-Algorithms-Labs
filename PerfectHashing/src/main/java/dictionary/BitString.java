@@ -16,10 +16,7 @@ public class BitString implements BinaryRepresentable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof BitString)) return false;
-        BitString that = (BitString) o;
-        return binaryString.equals(that.binaryString);
+        return o instanceof BitString && ((BitString) o).binaryString.equals(binaryString);
     }
 
     @Override

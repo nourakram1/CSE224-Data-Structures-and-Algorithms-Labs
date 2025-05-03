@@ -74,15 +74,19 @@ public class Dictionary {
     public void batchInsert(String filePath) {
         Input file= new Input();
         List<String> words = file.readFile(filePath);
-        table.insertAll(words.stream().map(this::getBinaryRepresentation).map(BitString::new).toList());
-        System.out.println("Inserted " + words.size() );
+        List<BitString> x = table.insertAll(words.stream().map(this::getBinaryRepresentation).map(BitString::new).toList());
+        System.out.println("Inserted " + x.size() + " words.");
+        System.out.println("Failed to insert " + (words.size() - x.size()) + " words.");
     }
 
     public void batchDelete(String filePath) {
         Input file= new Input();
         List<String> words = file.readFile(filePath);
-        table.removeAll(words.stream().map(this::getBinaryRepresentation).map(BitString::new).toList());
-        System.out.println("Deleted " + words.size() );
+        List<BitString> x = table.removeAll(words.stream().map(this::getBinaryRepresentation).map(BitString::new).toList());
+        System.out.println("Deleted " + x.size() + " words.");
+        System.out.println("Failed to delete " + (words.size() - x.size()) + " words.");
     }
+
+
 
 }
