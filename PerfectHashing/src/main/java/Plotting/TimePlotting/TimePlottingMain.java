@@ -12,7 +12,7 @@ import table.Hashtable;
 import table.HierarchicalHashtable;
 import table.Table;
 
-public class CompareInsertionTimesMain {
+public class TimePlottingMain {
     private static final int MAX_N = 1500;
     private static final int STEP = 50;
     private static final int BINLEN = 32;
