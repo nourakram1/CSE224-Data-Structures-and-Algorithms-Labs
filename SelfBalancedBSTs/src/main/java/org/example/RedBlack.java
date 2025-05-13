@@ -14,7 +14,7 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
       public static final boolean RED = true;
       public static final boolean BLACK = false;
 
-      public boolean color; // color of parent link
+      public boolean color;
 
       public RedBlackNode(K key, V value) {
          super(key, value);
@@ -24,17 +24,6 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
       public boolean isRed() {
          return color == RED;
       }
-   }
-
-   public V get(K key) {
-      RedBlackNode temp = (RedBlackNode) root;
-      while (temp != null) {
-         int cmp = compare(key, temp.key);
-         if (cmp < 0) temp = (RedBlackNode) temp.left;
-         else if (cmp > 0) temp = (RedBlackNode) temp.right;
-         else return temp.value;
-      }
-      return null;
    }
 
    private RedBlackNode rotateRight(RedBlackNode node) {
@@ -119,7 +108,7 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
          RedBlackNode maxLeft = (RedBlackNode) getMaxNode(node.left);
          node.key = maxLeft.key;
          node.value = maxLeft.value;
-         node.left = (RedBlackNode) deleteMax(node.left);
+         node.left = deleteMax(node.left);
       }
 
       return node;
