@@ -8,7 +8,7 @@ import java.util.List;
 public class HierarchicalHashtable<T extends BinaryRepresentable>
         extends AbstractHashtable<T> {
 
-    private static final int DEFAULT_CAPACITY = 8;
+    private static final int DEFAULT_CAPACITY = 1_000_000;
     private final List<Hashtable<T>> directory;
 
     public HierarchicalHashtable() {

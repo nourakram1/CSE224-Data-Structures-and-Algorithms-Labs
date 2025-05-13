@@ -16,20 +16,14 @@ public class AVL<K extends Comparable<K>, V> extends BST<K, V> {
 
    @Override
    protected Node<K, V> insert(Node<K, V> node, K key, V value) {
-      if (node == null) {
-         size++;
-         return new AVLNode(key, value);
-      }
+      if (node == null) return new AVLNode(key, value);
 
       AVLNode n = (AVLNode) node;
       int cmp = compare(key, n.key);
 
-      if (cmp < 0)
-         n.left = (AVLNode) insert(n.left, key, value);
-      else if (cmp > 0)
-         n.right = (AVLNode) insert(n.right, key, value);
-      else
-         n.value = value;
+      if       (cmp < 0)   n.left = (AVLNode) insert(n.left, key, value);
+      else if  (cmp > 0)   n.right = (AVLNode) insert(n.right, key, value);
+      else                 n.value = value;
 
       updateHeight(n);
       return balance(n);
@@ -42,12 +36,10 @@ public class AVL<K extends Comparable<K>, V> extends BST<K, V> {
       AVLNode n = (AVLNode) node;
       int cmp = compare(key, n.key);
 
-      if (cmp < 0)
-         n.left = (AVLNode) delete(n.left, key);
-      else if (cmp > 0)
-         n.right = (AVLNode) delete(n.right, key);
+      if       (cmp < 0)   n.left = (AVLNode) delete(n.left, key);
+      else if  (cmp > 0)   n.right = (AVLNode) delete(n.right, key);
       else {
-         if (n.left == null) return n.right;
+         if (n.left == null)  return n.right;
          if (n.right == null) return n.left;
 
          AVLNode successor = (AVLNode) getMinNode(n.right);

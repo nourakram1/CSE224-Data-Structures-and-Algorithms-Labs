@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 public abstract class BST<K extends Comparable<K>, V> {
    protected Node<K, V> root;
@@ -31,17 +32,19 @@ public abstract class BST<K extends Comparable<K>, V> {
    protected abstract Node<K, V> insert(Node<K, V> node, K key, V value);
    protected abstract Node<K, V> delete(Node<K, V> node, K key);
 
+   public V get(K key) {return find(root, key).value;}
+
    public boolean insert(K key, V value) {
-      if (key == null) throw new NullPointerException("Key must not be null");
+      Objects.requireNonNull(key);
       int prevSize = size;
+      if(!contains(key)) size++;
       root = insert(root, key, value);
-      return size > prevSize;
+      return prevSize > size;
    }
 
    public boolean delete(K key) {
-      if (key == null) throw new IllegalArgumentException("Key must not be null");
-      Node<K, V> node = find(root, key);
-      if (node == null) return false;
+      Objects.requireNonNull(key);
+      if(!contains(key)) return false;
       root = delete(root, key);
       size--;
       return true;
@@ -54,8 +57,8 @@ public abstract class BST<K extends Comparable<K>, V> {
    protected Node<K, V> find(Node<K, V> node, K key) {
       if (node == null || key == null) return null;
       int cmp = compare(key, node.key);
-      if (cmp < 0) return find(node.left, key);
-      else if (cmp > 0) return find(node.right, key);
+      if       (cmp < 0) return find(node.left, key);
+      else if  (cmp > 0) return find(node.right, key);
       else return node;
    }
 
@@ -63,34 +66,16 @@ public abstract class BST<K extends Comparable<K>, V> {
       return comparator != null ? comparator.compare(a, b) : a.compareTo(b);
    }
 
-   public int size() {
-      return size;
-   }
+   public int size() {return size;}
 
-   public boolean isEmpty() {
-      return size == 0;
-   }
-
-   public K getMin() {
-      return isEmpty() ? null : getMinNode(root).key;
-   }
+   public boolean isEmpty() {return size == 0;}
 
    protected Node<K, V> getMinNode(Node<K, V> node) {
-      return node.left == null ? node : getMinNode(node.left);
-   }
-
-   public K getMax() {
-      return isEmpty() ? null : getMaxNode(root).key;
+      return (node == null || node.left == null) ? node : getMinNode(node.left);
    }
 
    protected Node<K, V> getMaxNode(Node<K, V> node) {
-      return node.right == null ? node : getMaxNode(node.right);
-   }
-
-   public boolean deleteMin() {
-      if (isEmpty()) return false;
-      delete(getMin());
-      return true;
+      return (node == null || node.right == null) ? node : getMaxNode(node.right);
    }
 
    protected Node<K, V> deleteMax(Node<K, V> node) {
@@ -98,5 +83,12 @@ public abstract class BST<K extends Comparable<K>, V> {
          return node.left;
       node.right = deleteMax(node.right);
       return node;
+   }
+
+   public int height() {return height(root);}
+
+   private int height(Node<K, V> node) {
+      if(node == null) return 0;
+      return 1 + Math.max(height(node.left), height(node.right));
    }
 }

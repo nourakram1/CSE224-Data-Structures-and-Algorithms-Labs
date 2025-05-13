@@ -6,16 +6,18 @@ import input.Input;
 import table.Hashtable;
 import table.HierarchicalHashtable;
 import table.Table;
+import table.instrument.InstrumentedHashtable;
 
 public class Dictionary {
 
-    private Table<BitString> table;
+    public Table<BitString> table;
+
 
     public Dictionary(boolean twolevel) {
-        if(twolevel) {
+        if (twolevel) {
             table = new HierarchicalHashtable<>();
         } else {
-            table = new Hashtable<>();
+            table = new InstrumentedHashtable<>();
         }
     }
     public String getBinaryRepresentation(String word) {
