@@ -51,8 +51,24 @@ public class Hashtable<T extends BinaryRepresentable>
     }
 
     @Override
+    protected void ensureCapacity(int capacity) {
+        if (this.capacity < capacity) {
+            setCapacity(capacity);
+            ListUtils.ensureSize(elements, this.capacity);
+            rehash();
+        }
+    }
+
+    @Override
     public List<T> getElements() {
         return ListUtils.nonNull(elements);
+    }
+
+    protected void clear() {
+        elements.clear();
+        ListUtils.ensureSize(elements, DEFAULT_CAPACITY);
+        this.capacity = DEFAULT_CAPACITY;
+        this.universalHash = null;
     }
 
     protected void grow() {
@@ -62,31 +78,38 @@ public class Hashtable<T extends BinaryRepresentable>
     }
 
     protected void rehash() {
+        if (size == 0)
+            return;
+
         List<T> elements = getElements();
         UniversalHash<T> universalHash = getUniversalHash();
-        List<T> hashed = hash(elements, universalHash);
+        ListUtils.nullOut(this.elements);
 
-        while (hashed == null) {
+        boolean hashed = hash(elements, this.elements, universalHash);
+
+        while (!hashed) {
             universalHash = getUniversalHash();
-            hashed = hash(elements, universalHash);
+            ListUtils.nullOut(this.elements);
+            hashed = hash(elements, this.elements, universalHash);
         }
 
         this.universalHash = universalHash;
-        ListUtils.replaceWith(this.elements, hashed);
     }
 
-    protected List<T> hash(List<T> elements, UniversalHash<T> universalHash) {
-        List<T> hashed = ListUtils.arrayList(capacity);
+    protected boolean hash(List<T> elements, List<T> into, UniversalHash<T> universalHash) {
+        if (into.size() != capacity)
+            throw new IllegalArgumentException("into.size() != capacity");
 
-        for (T element : getElements()) {
+        for (T element : elements) {
             int hashCode = universalHash.getHashCode(element);
-            if (hashed.get(hashCode) != null)
-                return null;
 
-            hashed.set(hashCode, element);
+            if (into.get(hashCode) != null)
+                return false;
+
+            into.set(hashCode, element);
         }
 
-        return hashed;
+        return true;
     }
 
     protected boolean collision(T value) {

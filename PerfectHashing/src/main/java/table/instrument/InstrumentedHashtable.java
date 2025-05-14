@@ -20,9 +20,9 @@ public class InstrumentedHashtable<T extends BinaryRepresentable>
     }
 
     @Override
-    protected List<T> hash(List<T> elements, UniversalHash<T> universalHash) {
+    protected boolean hash(List<T> elements, List<T> into, UniversalHash<T> universalHash) {
         rehashCount++;
-        return super.hash(elements, universalHash);
+        return super.hash(elements, into, universalHash);
     }
 
     @Override

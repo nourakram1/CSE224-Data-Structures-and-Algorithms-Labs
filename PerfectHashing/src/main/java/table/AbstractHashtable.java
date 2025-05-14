@@ -12,14 +12,11 @@ public abstract class AbstractHashtable<T extends BinaryRepresentable>
     protected static final int MIN_CAPACITY = 2;
     protected int BINARY_REPRESENTATION_LENGTH;
     protected int capacity;
-    protected int size;
+    protected long size;
     protected UniversalHash<T> universalHash;
 
     public AbstractHashtable(int capacity) {
-        if (capacity < MIN_CAPACITY)
-            throw new IllegalArgumentException("capacity < 2");
-
-        this.capacity = MathUtils.nextPowerOfTwo(capacity);
+        setCapacity(capacity);
     }
 
     @Override
@@ -46,6 +43,7 @@ public abstract class AbstractHashtable<T extends BinaryRepresentable>
 
     @Override
     public List<T> insertAll(List<T> values) {
+        ensureCapacity(values.size());
         return values.stream().filter(this::insert).toList();
     }
 
@@ -70,4 +68,13 @@ public abstract class AbstractHashtable<T extends BinaryRepresentable>
     protected UniversalHash<T> getUniversalHash() {
         return new UniversalHash<>(capacity, BINARY_REPRESENTATION_LENGTH);
     }
+
+    protected void setCapacity(int capacity) {
+        if (capacity < MIN_CAPACITY)
+            throw new IllegalArgumentException(String.format("capacity < %d", MIN_CAPACITY));
+
+        this.capacity = MathUtils.nextPowerOfTwo(capacity);
+    }
+
+    abstract protected void ensureCapacity(int capacity);
 }

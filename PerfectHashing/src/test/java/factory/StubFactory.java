@@ -10,8 +10,8 @@ import java.util.Random;
 
 public class StubFactory implements Factory<Stub> {
 
-    protected final int MAX_LIST_SIZE = 10;
-    protected final Random rand = new Random();
+    protected static final int MAX_LIST_SIZE = 10;
+    protected static final Random rand = new Random();
 
     @Override
     public Stub createInstance() {
@@ -19,8 +19,16 @@ public class StubFactory implements Factory<Stub> {
     }
 
     @Override
-    public List<Stub> createUniqueInstances() {
-        return ListUtils.unique(createInstances());
+    public List<Stub> createInstances() {
+        return createInstances(rand.nextInt(MAX_LIST_SIZE));
+    }
+
+    @Override
+    public List<Stub> createInstances(int n) {
+        if (n < 0)
+            throw new IllegalArgumentException("The number of instances cannot be negative");
+
+        return ListUtils.arrayList(n, this::createInstance);
     }
 
     @Override
@@ -28,9 +36,5 @@ public class StubFactory implements Factory<Stub> {
         List<Stub> duplicateStubs = new ArrayList<>(ListUtils.merge(uniqueStubs, uniqueStubs));
         Collections.shuffle(duplicateStubs);
         return duplicateStubs;
-    }
-
-    private List<Stub> createInstances() {
-        return ListUtils.arrayList(rand.nextInt(MAX_LIST_SIZE), this::createInstance);
     }
 }

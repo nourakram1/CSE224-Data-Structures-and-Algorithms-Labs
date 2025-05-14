@@ -51,9 +51,7 @@ public interface Table<T> {
      * @return a list of elements that were actually inserted (i.e., those not already present);
      * returns an empty list if none of the elements were inserted
      */
-    default List<T> insertAll(List<T> values) {
-        return values.stream().filter(this::insert).toList();
-    }
+    List<T> insertAll(List<T> values);
 
     /**
      * Removes all the elements in the given list from the table.
@@ -63,9 +61,7 @@ public interface Table<T> {
      * @return a list of elements that were actually removed (i.e., those that existed in the table);
      * returns an empty list if none of the elements were removed
      */
-    default List<T> removeAll(List<T> values) {
-        return values.stream().filter(this::remove).toList();
-    }
+    List<T> removeAll(List<T> values);
 
     /**
      * Returns a list of all elements currently in the table.

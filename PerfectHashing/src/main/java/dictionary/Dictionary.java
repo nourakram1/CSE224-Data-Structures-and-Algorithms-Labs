@@ -2,93 +2,55 @@ package dictionary;
 
 import java.util.List;
 
-import input.Input;
-import table.Hashtable;
-import table.HierarchicalHashtable;
 import table.Table;
-import table.instrument.InstrumentedHashtable;
 
 public class Dictionary {
 
-    public Table<BitString> table;
+    private final Table<DictionaryEntry> table;
 
-
-    public Dictionary(boolean twolevel) {
-        if (twolevel) {
-            table = new HierarchicalHashtable<>();
-        } else {
-            table = new InstrumentedHashtable<>();
-        }
-    }
-    public String getBinaryRepresentation(String word) {
-        StringBuilder binary = new StringBuilder();
-
-        word = word.toLowerCase(); // Convert to lowercase to handle case insensitivity
-
-        for (char c : word.toCharArray()) {
-            int value = c - 'a' + 1;  //'a' = 1, 'b' = 2, ..., 'z' = 26
-            String bin = String.format("%5s", Integer.toBinaryString(value)).replace(' ', '0');
-            binary.append(bin);
-        }
-
-        // Pad the binary string to 225 bits
-        while (binary.length() < 225) {
-            binary.append("0");
-        }
-
-        return binary.toString();
+    public Dictionary(Table<DictionaryEntry> table) {
+        this.table = table;
     }
 
     public void insert(String word) {
-        String binaryRepresentation = getBinaryRepresentation(word);
-        BitString bitString = new BitString(binaryRepresentation);
-        boolean inserted = table.insert(bitString);
+        DictionaryEntry entry = new DictionaryEntry(word);
+        boolean inserted = table.insert(entry);
         if (!inserted) {
-            System.out.println("Insertion failed");
+            System.out.println("Insertion failed, entry already exists");
             return;
         }
         System.out.println("Inserted: " + word);
     }
 
-    public boolean search(String word) {
-        String binaryRepresentation = getBinaryRepresentation(word);
-        BitString bitString = new BitString(binaryRepresentation);
-        boolean found = table.contains(bitString);
-        if (found) {
-            System.out.println("Found: " + word);
-        } else {
-            System.out.println("Not found: " + word);
+    public void search(String word) {
+        DictionaryEntry entry = new DictionaryEntry(word);
+        boolean found = table.contains(entry);
+        if (!found) {
+            System.out.println("Entry not found");
+            return;
         }
-        return found;
+        System.out.println("Found: " + word);
     }
 
     public void delete(String word) {
-        String binaryRepresentation = getBinaryRepresentation(word);
-        BitString bitString = new BitString(binaryRepresentation);
-        boolean removed = table.remove(bitString);
-        if (removed) {
-            System.out.println("Deleted: " + word);
-        } else {
-            System.out.println("Deletion failed: " + word + " not found");
+        DictionaryEntry entry = new DictionaryEntry(word);
+        boolean removed = table.remove(entry);
+        if (!removed) {
+            System.out.println("Deletion failed, entry does not exist");
+            return;
         }
+        System.out.println("Deleted: " + word);
     }
 
-    public void batchInsert(String filePath) {
-        Input file= new Input();
-        List<String> words = file.readFile(filePath);
-        List<BitString> x = table.insertAll(words.stream().map(this::getBinaryRepresentation).map(BitString::new).toList());
-        System.out.println("Inserted " + x.size() + " words.");
-        System.out.println("Failed to insert " + (words.size() - x.size()) + " words.");
+    public void batchInsert(List<String> words) {
+        List<DictionaryEntry> inserted = table.insertAll(words.stream().map(DictionaryEntry::new).toList());
+        System.out.println("Inserted " + inserted.size() + " words.");
+        System.out.println("Failed to insert " + (words.size() - inserted.size()) + " words.");
     }
 
-    public void batchDelete(String filePath) {
-        Input file= new Input();
-        List<String> words = file.readFile(filePath);
-        List<BitString> x = table.removeAll(words.stream().map(this::getBinaryRepresentation).map(BitString::new).toList());
-        System.out.println("Deleted " + x.size() + " words.");
-        System.out.println("Failed to delete " + (words.size() - x.size()) + " words.");
+    public void batchDelete(List<String> words) {
+        List<DictionaryEntry> removed = table.removeAll(words.stream().map(DictionaryEntry::new).toList());
+        System.out.println("Deleted " + removed.size() + " words.");
+        System.out.println("Failed to delete " + (words.size() - removed.size()) + " words.");
     }
-
-
-
 }

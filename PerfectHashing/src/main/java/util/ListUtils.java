@@ -21,23 +21,18 @@ public interface ListUtils {
     }
 
     static <T> void ensureSize(List<T> list, int desiredSized) {
-        ensureSize(list, desiredSized, null);
+        ensureSize(list, desiredSized, () -> null);
     }
 
-    static <T> void ensureSize(List<T> list, int desiredSized, T padding) {
-        if (desiredSized > list.size()) {
-            list.addAll(Collections.nCopies(desiredSized - list.size(), padding));
-        }
+    static <T> void ensureSize(List<T> list, int desiredSized, Supplier<T> supplier) {
+        int actualSize = list.size();
+
+        for (int i = 0; i < desiredSized - actualSize; i++)
+            list.add(supplier.get());
     }
 
-    static <T> void replaceWith(List<T> list, List<T> with) {
-        list.clear();
-        list.addAll(with);
-    }
-
-    static <T> void replaceWith(List<T> list, int capacity, Supplier<T> supplier) {
-        list.clear();
-        list.addAll(Stream.generate(supplier).limit(capacity).toList());
+    static <T> void nullOut(List<T> list) {
+        Collections.fill(list, null);
     }
 
     static <T> List<T> nonNull(List<T> list) {
