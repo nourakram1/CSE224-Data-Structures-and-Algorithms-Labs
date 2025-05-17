@@ -1,8 +1,8 @@
-package org.example;
+package TreeMap;
 
 /**
  * Implementation of Left Leaning Red Black Binary Search Tree
- * Red Black Tree is a BST such that:
+ * Red Black Tree is a TreeMap.BST such that:
  * - No node has two red links connected to it.
  * - Every path from root to null link has the same number of black links.
  * (Perfect Balance)

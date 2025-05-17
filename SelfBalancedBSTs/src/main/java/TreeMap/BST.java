@@ -1,4 +1,4 @@
-package org.example;
+package TreeMap;
 
 import java.util.Comparator;
 import java.util.Objects;

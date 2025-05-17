@@ -1,5 +1,4 @@
-package org.example;
-
+package TreeMap;
 
 public class AVL<K extends Comparable<K>, V> extends BST<K, V> {
    private static final int EMPTY_HEIGHT = -1;
@@ -92,6 +91,11 @@ public class AVL<K extends Comparable<K>, V> extends BST<K, V> {
 
    private int height(AVLNode node) {
       return node == null ? EMPTY_HEIGHT : node.height;
+   }
+
+   @Override
+   public int height() {
+      return height((AVLNode) root);
    }
 
    private void updateHeight(AVLNode node) {
