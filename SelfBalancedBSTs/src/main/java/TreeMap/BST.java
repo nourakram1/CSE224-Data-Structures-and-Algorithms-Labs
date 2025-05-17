@@ -39,7 +39,7 @@ public abstract class BST<K extends Comparable<K>, V> {
       int prevSize = size;
       if(!contains(key)) size++;
       root = insert(root, key, value);
-      return prevSize > size;
+      return prevSize < size;
    }
 
    public boolean delete(K key) {
@@ -51,6 +51,7 @@ public abstract class BST<K extends Comparable<K>, V> {
    }
 
    public boolean contains(K key) {
+      Objects.requireNonNull(key);
       return find(root, key) != null;
    }
 
@@ -59,14 +60,14 @@ public abstract class BST<K extends Comparable<K>, V> {
       int cmp = compare(key, node.key);
       if       (cmp < 0) return find(node.left, key);
       else if  (cmp > 0) return find(node.right, key);
-      else return node;
+      else               return node;
    }
 
    protected int compare(K a, K b) {
       return comparator != null ? comparator.compare(a, b) : a.compareTo(b);
    }
 
-   public int size() {return size;}
+   public int size() { return size; }
 
    public boolean isEmpty() {return size == 0;}
 
@@ -85,10 +86,13 @@ public abstract class BST<K extends Comparable<K>, V> {
       return node;
    }
 
-   public int height() {return height(root);}
+   public int height() {
+      if(root == null) return 0;
+      return height(root);
+   }
 
    private int height(Node<K, V> node) {
-      if(node == null) return 0;
+      if(node == null) return -1;
       return 1 + Math.max(height(node.left), height(node.right));
    }
 }

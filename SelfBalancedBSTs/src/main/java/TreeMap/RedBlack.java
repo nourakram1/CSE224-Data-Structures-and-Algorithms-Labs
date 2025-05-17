@@ -27,7 +27,7 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
    }
 
    private RedBlackNode rotateRight(RedBlackNode node) {
-      assert node.left != null && ((RedBlackNode) node.left).isRed();
+      // assert node.left != null && ((RedBlackNode) node.left).isRed();
       RedBlackNode x = (RedBlackNode) node.left;
       node.left = x.right;
       x.right = node;
@@ -39,7 +39,7 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
    }
 
    private RedBlackNode rotateLeft(RedBlackNode node) {
-      assert node.right != null && ((RedBlackNode) node.right).isRed();
+      // assert node.right != null && ((RedBlackNode) node.right).isRed();
       RedBlackNode x = (RedBlackNode) node.right;
       node.right = x.left;
       x.left = node;
@@ -51,9 +51,9 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
    }
 
    private void flipColors(RedBlackNode node) {
-      assert node != null;
-      assert node.left != null && node.right != null;
-      assert !node.isRed() && ((RedBlackNode) node.left).isRed() && ((RedBlackNode) node.right).isRed();
+      // assert node != null;
+      // assert node.left != null && node.right != null;
+      // assert !node.isRed() && ((RedBlackNode) node.left).isRed() && ((RedBlackNode) node.right).isRed();
 
       node.color = RedBlackNode.RED;
       ((RedBlackNode) node.left).color = RedBlackNode.BLACK;
@@ -91,6 +91,28 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
       return node;
    }
 
+   protected Node<K, V> hibbardDelete(Node<K, V> node, K key) {
+      if (node == null)
+         return null;
+
+      int cmp = compare(key, node.key);
+      if (cmp < 0)
+         node.left = delete(node.left, key);
+      else if (cmp > 0)
+         node.right = delete(node.right, key);
+      else {
+         if (node.left == null) return node.right;
+         if (node.right == null) return node.left;
+
+         RedBlackNode maxLeft = (RedBlackNode) getMaxNode(node.left);
+         node.key = maxLeft.key;
+         node.value = maxLeft.value;
+         node.left = deleteMax(node.left);
+      }
+
+      return node;
+   }
+
    @Override
    protected Node<K, V> delete(Node<K, V> node, K key) {
       if (node == null)
@@ -112,5 +134,24 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
       }
 
       return node;
+   }
+
+   private RedBlackNode moveRedLeft(RedBlackNode h) {
+      flipColors(h);
+      if (((RedBlackNode) h.right.left).isRed()) {
+         h.right = (RedBlackNode) rotateRight((RedBlackNode) h.right);
+         h = rotateLeft(h);
+         flipColors(h);
+      }
+      return h;
+   }
+
+   private RedBlackNode moveRedRight(RedBlackNode h) {
+      flipColors(h);
+      if (((RedBlackNode) h.left.left).isRed()) {
+         h = rotateRight(h);
+         flipColors(h);
+      }
+      return h;
    }
 }

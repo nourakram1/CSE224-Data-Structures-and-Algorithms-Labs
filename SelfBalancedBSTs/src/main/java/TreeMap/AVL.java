@@ -5,46 +5,60 @@ public class AVL<K extends Comparable<K>, V> extends BST<K, V> {
 
    protected class AVLNode extends Node<K, V> {
       int height;
-      AVLNode left, right;
 
       AVLNode(K key, V value) {
          super(key, value);
          this.height = 0;
       }
+
+      @Override
+      public String toString() {
+         return key + " (h=" + height + ")";
+      }
    }
 
    @Override
    protected Node<K, V> insert(Node<K, V> node, K key, V value) {
-      if (node == null) return new AVLNode(key, value);
+      return insert(cast(node), key, value);
+   }
 
-      AVLNode n = (AVLNode) node;
-      int cmp = compare(key, n.key);
+   private AVLNode insert(AVLNode node, K key, V value) {
+      if (node == null)
+         return new AVLNode(key, value);
 
-      if       (cmp < 0)   n.left = (AVLNode) insert(n.left, key, value);
-      else if  (cmp > 0)   n.right = (AVLNode) insert(n.right, key, value);
-      else                 n.value = value;
+      int cmp = compare(key, node.key);
+      if (cmp < 0)
+         node.left = insert(cast(node.left), key, value);
+      else if (cmp > 0)
+         node.right = insert(cast(node.right), key, value);
+      else
+         node.value = value;
 
-      updateHeight(n);
-      return balance(n);
+      updateHeight(node);
+      return balance(node);
    }
 
    @Override
    protected Node<K, V> delete(Node<K, V> node, K key) {
-      if (node == null) return null;
+      AVLNode n = cast(node);
+      if (n == null)
+         return null;
 
-      AVLNode n = (AVLNode) node;
       int cmp = compare(key, n.key);
-
-      if       (cmp < 0)   n.left = (AVLNode) delete(n.left, key);
-      else if  (cmp > 0)   n.right = (AVLNode) delete(n.right, key);
+      if (cmp < 0)
+         n.left = delete(n.left, key);
+      else if (cmp > 0)
+         n.right = delete(n.right, key);
       else {
-         if (n.left == null)  return n.right;
-         if (n.right == null) return n.left;
+         if (n.left == null)
+            return n.right;
+         if (n.right == null)
+            return n.left;
 
-         AVLNode successor = (AVLNode) getMinNode(n.right);
+         AVLNode successor = getMinNode(n.right);
          n.key = successor.key;
          n.value = successor.value;
-         n.right = (AVLNode) delete(n.right, successor.key);
+         n.right = delete(n.right, successor.key);
       }
 
       updateHeight(n);
@@ -54,20 +68,21 @@ public class AVL<K extends Comparable<K>, V> extends BST<K, V> {
    private AVLNode balance(AVLNode node) {
       int bf = balanceFactor(node);
       if (bf < -1) {
-         if (balanceFactor(node.left) > 0)
-            node.left = rotateLeft(node.left);
+         if (balanceFactor(cast(node.left)) > 0)
+            node.left = rotateLeft(cast(node.left));
          return rotateRight(node);
       } else if (bf > 1) {
-         if (balanceFactor(node.right) < 0)
-            node.right = rotateRight(node.right);
+         if (balanceFactor(cast(node.right)) < 0)
+            node.right = rotateRight(cast(node.right));
          return rotateLeft(node);
       }
       return node;
    }
 
-   private AVLNode rotateLeft(Node<K, V> x) {
-      AVLNode a = (AVLNode) x;
-      AVLNode b = a.right;
+   private AVLNode rotateLeft(AVLNode a) {
+      if (a == null || a.right == null)
+         return a;
+      AVLNode b = cast(a.right);
       a.right = b.left;
       b.left = a;
       updateHeight(a);
@@ -75,9 +90,10 @@ public class AVL<K extends Comparable<K>, V> extends BST<K, V> {
       return b;
    }
 
-   private AVLNode rotateRight(Node<K, V> x) {
-      AVLNode a = (AVLNode) x;
-      AVLNode b = a.left;
+   private AVLNode rotateRight(AVLNode a) {
+      if (a == null || a.left == null)
+         return a;
+      AVLNode b = cast(a.left);
       a.left = b.right;
       b.right = a;
       updateHeight(a);
@@ -86,7 +102,7 @@ public class AVL<K extends Comparable<K>, V> extends BST<K, V> {
    }
 
    private int balanceFactor(AVLNode node) {
-      return height(node.right) - height(node.left);
+      return height(cast(node.right)) - height(cast(node.left));
    }
 
    private int height(AVLNode node) {
@@ -95,10 +111,25 @@ public class AVL<K extends Comparable<K>, V> extends BST<K, V> {
 
    @Override
    public int height() {
-      return height((AVLNode) root);
+      if(root == null) return 0;
+      return height(cast(root));
    }
 
    private void updateHeight(AVLNode node) {
-      node.height = 1 + Math.max(height(node.left), height(node.right));
+      node.height = 1 + Math.max(height(cast(node.left)), height(cast(node.right)));
+   }
+
+   protected AVLNode getMinNode(Node<K, V> node) {
+      AVLNode current = cast(node);
+      while (current.left != null)
+         current = cast(current.left);
+      return current;
+   }
+
+   /**
+    * Safely casts Node<K, V> to AVLNode.
+    */
+   private AVLNode cast(Node<K, V> node) {
+      return (AVLNode) node;
    }
 }
