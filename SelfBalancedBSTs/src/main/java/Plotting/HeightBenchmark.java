@@ -15,28 +15,33 @@ public class HeightBenchmark {
         List<Integer> ns = new ArrayList<>();
         List<Double> avlHeights = new ArrayList<>();
         List<Double> rbHeights = new ArrayList<>();
+        List<Double> idealHeights = new ArrayList<>();
 
         Random rand = new Random();
 
-        for (int n = START; n <= END; n *= FACTOR) {
-            ns.add(n);
+        for (int n = START, idealHeight = 0; n <= END; n *= FACTOR, idealHeight++) {
+            int items = n - 1;
+            ns.add(items);
 
-            List<Integer> keys = new ArrayList<>(rand.ints().distinct().limit(n).boxed().toList());
+            List<Integer> keys = new ArrayList<>(rand.ints().distinct().limit(items).boxed().toList());
 
             double avlHeight = measureHeight(AVLSet::new, keys);
             double rbHeight = measureHeight(RedBlackSet::new, keys);
 
             avlHeights.add(avlHeight);
             rbHeights.add(rbHeight);
+            idealHeights.add((double)idealHeight);
 
-            System.out.printf("n = %d → AVL height: %.1f, RB height: %.1f%n", n, avlHeight, rbHeight);
+            System.out.printf("n = %d → AVL height: %.1f, RB height: %.1f%n", items, avlHeight, rbHeight);
         }
 
         ChartPlotter.plotAndSave(
-                ns, avlHeights, rbHeights,
-                "AVL Tree", "Red-Black Tree",
+                ns,
+                new List[]{avlHeights, rbHeights, idealHeights},
+                new String[]{"AVL Tree", "Red-Black Tree", "Ideal Height"},
                 "Tree Height vs. Number of Elements",
-                "Number of Elements (n)", "Height",
+                "Number of Elements (n)",
+                "Height",
                 "height_chart.png"
         );
     }

@@ -17,22 +17,28 @@ public class ChartPlotter {
 
     public static void plotAndSave(
             List<Integer> ns,
-            List<Double> series1,
-            List<Double> series2,
-            String label1,
-            String label2,
+            List<Double>[] series,
+            String[] labels,
             String title,
             String xAxis,
             String yAxis,
             String outputFile) throws IOException {
+
+        if (series.length != labels.length) {
+            throw new IllegalArgumentException("Number of series and labels must be the same");
+        }
+
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (int i = 0; i < ns.size(); i++) {
-            dataset.addValue(series1.get(i), label1, ns.get(i));
-            dataset.addValue(series2.get(i), label2, ns.get(i));
+            for (int s = 0; s < series.length; s++) {
+                dataset.addValue(series[s].get(i), labels[s], ns.get(i));
+            }
         }
+
         JFreeChart chart = ChartFactory.createLineChart(
                 title, xAxis, yAxis, dataset,
                 PlotOrientation.VERTICAL, true, true, false);
+
         ChartUtils.saveChartAsPNG(new File(outputFile), chart, 1500, 1000);
         SwingUtilities.invokeLater(() -> {
             JFrame f = new JFrame(title);

@@ -33,12 +33,15 @@ public class SearchBenchmark {
         }
 
         ChartPlotter.plotAndSave(
-                ns, avlTimes, rbTimes,
-                "AVL Tree", "Red-Black Tree",
+                ns,
+                new List[]{avlTimes, rbTimes},
+                new String[]{"AVL Tree", "Red-Black Tree"},
                 "Search Time vs. Number of Elements",
-                "Number of Elements (n)", "Time (ms)",
+                "Number of Elements (n)",
+                "Time (ms)",
                 "search_time_chart.png"
         );
+
     }
 
     private static double measureSearchTime(Supplier<BSTSet<Integer>> setSupplier, List<Integer> keys) {
