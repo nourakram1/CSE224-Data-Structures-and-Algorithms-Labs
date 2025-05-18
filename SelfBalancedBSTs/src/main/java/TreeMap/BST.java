@@ -37,7 +37,7 @@ public abstract class BST<K extends Comparable<K>, V> {
    public boolean insert(K key, V value) {
       Objects.requireNonNull(key);
       int prevSize = size;
-      if(!contains(key)) size++;
+//      if(!contains(key)) size++;
       root = insert(root, key, value);
       return prevSize < size;
    }

@@ -66,8 +66,10 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
    }
 
    private RedBlackNode insert(RedBlackNode node, K key, V value) {
-      if (node == null) return new RedBlackNode(key, value);
-
+      if (node == null) {
+         size++;
+         return new RedBlackNode(key, value);
+      }
       int cmp = compare(key, node.key);
       if (cmp < 0)
          node.left = insert((RedBlackNode) node.left, key, value);

@@ -23,8 +23,10 @@ public class AVL<K extends Comparable<K>, V> extends BST<K, V> {
    }
 
    private AVLNode insert(AVLNode node, K key, V value) {
-      if (node == null)
+      if (node == null) {
+         size++;
          return new AVLNode(key, value);
+      }
 
       int cmp = compare(key, node.key);
       if (cmp < 0)
