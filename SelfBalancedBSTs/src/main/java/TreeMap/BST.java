@@ -32,12 +32,12 @@ public abstract class BST<K extends Comparable<K>, V> {
    protected abstract Node<K, V> insert(Node<K, V> node, K key, V value);
    protected abstract Node<K, V> delete(Node<K, V> node, K key);
 
-   public V get(K key) {return find(root, key).value;}
+   public V get(K key) { return find(root, key).value; }
 
    public boolean insert(K key, V value) {
       Objects.requireNonNull(key);
       int prevSize = size;
-      if(!contains(key)) size++;
+      // if(!contains(key)) size++;
       root = insert(root, key, value);
       return prevSize < size;
    }

@@ -329,11 +329,13 @@ class AdvancedSetTest {
 				set.insert(v);
 				reference.add(v);
 			}
+
 			for (int i = 0; i < 100; i++) {
 				int v = rand.nextInt(100);
 				set.delete(v);
 				reference.remove(v);
 			}
+			
 			for (int v = 0; v < 100; v++) {
 				assertEquals(reference.contains(v), set.search(v));
 			}

@@ -1,5 +1,3 @@
-// package TreeSet;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -84,8 +82,10 @@ class BalancedSetTest {
 		testBoth(set -> {
 			for (int i = 0; i < 10; i++)
 				set.insert(i);
+
 			for (int i = 0; i < 10; i++)
 				assertTrue(set.delete(i));
+			
 			assertTrue(set.size() == 0);
 		});
 	}

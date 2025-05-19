@@ -1,157 +1,170 @@
 package TreeMap;
 
-/**
- * Implementation of Left Leaning Red Black Binary Search Tree
- * Red Black Tree is a TreeMap.BST such that:
- * - No node has two red links connected to it.
- * - Every path from root to null link has the same number of black links.
- * (Perfect Balance)
- * - Red links lean left.
- */
 public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
 
-   private class RedBlackNode extends Node<K, V> {
-      public static final boolean RED = true;
-      public static final boolean BLACK = false;
+    private class RedBlackNode extends Node<K, V> {
+        public static final boolean RED = true;
+        public static final boolean BLACK = false;
 
-      public boolean color;
+        public boolean color;
 
-      public RedBlackNode(K key, V value) {
-         super(key, value);
-         this.color = RED;
-      }
+        public RedBlackNode(K key, V value) {
+            super(key, value);
+            this.color = RED;
+        }
 
-      public boolean isRed() {
-         return color == RED;
-      }
-   }
+    }
 
-   private RedBlackNode rotateRight(RedBlackNode node) {
-      // assert node.left != null && ((RedBlackNode) node.left).isRed();
-      RedBlackNode x = (RedBlackNode) node.left;
-      node.left = x.right;
-      x.right = node;
+    private boolean isRed(Node<K, V> x) {
+        if (x == null)
+            return false;
+        return ((RedBlackNode) x).color == RedBlackNode.RED;
+    }
 
-      x.color = node.color;
-      node.color = RedBlackNode.RED;
+    private RedBlackNode rotateRight(RedBlackNode node) {
+        RedBlackNode x = (RedBlackNode) node.left;
+        node.left = x.right;
+        x.right = node;
+        x.color = node.color;
+        node.color = RedBlackNode.RED;
+        return x;
+    }
 
-      return x;
-   }
+    private RedBlackNode rotateLeft(RedBlackNode node) {
+        RedBlackNode x = (RedBlackNode) node.right;
+        node.right = x.left;
+        x.left = node;
+        x.color = node.color;
+        node.color = RedBlackNode.RED;
+        return x;
+    }
 
-   private RedBlackNode rotateLeft(RedBlackNode node) {
-      // assert node.right != null && ((RedBlackNode) node.right).isRed();
-      RedBlackNode x = (RedBlackNode) node.right;
-      node.right = x.left;
-      x.left = node;
+    private void flipColors(RedBlackNode node) {
+        node.color = !node.color;
+        ((RedBlackNode) node.left).color = !((RedBlackNode) node.left).color;
+        ((RedBlackNode) node.right).color = !((RedBlackNode) node.right).color;
+    }
 
-      x.color = node.color;
-      node.color = RedBlackNode.RED;
+    private RedBlackNode balance(RedBlackNode h) {
+        if (isRed(h.right) && !isRed(h.left))
+            h = rotateLeft(h);
+        if (isRed(h.left) && isRed(h.left.left))
+            h = rotateRight(h);
+        if (isRed(h.left) && isRed(h.right))
+            flipColors(h);
 
-      return x;
-   }
+        return h;
+    }
 
-   private void flipColors(RedBlackNode node) {
-      // assert node != null;
-      // assert node.left != null && node.right != null;
-      // assert !node.isRed() && ((RedBlackNode) node.left).isRed() && ((RedBlackNode) node.right).isRed();
+    @Override
+    protected Node<K, V> insert(Node<K, V> node, K key, V value) {
+        RedBlackNode root = insert((RedBlackNode) node, key, value);
+        root.color = RedBlackNode.BLACK;
+        return root;
+    }
 
-      node.color = RedBlackNode.RED;
-      ((RedBlackNode) node.left).color = RedBlackNode.BLACK;
-      ((RedBlackNode) node.right).color = RedBlackNode.BLACK;
-   }
+    private RedBlackNode insert(RedBlackNode node, K key, V value) {
+        if (node == null) {
+            size++;
+            return new RedBlackNode(key, value);
+        }
 
-   @Override
-   protected Node<K, V> insert(Node<K, V> node, K key, V value) {
-      return insert((RedBlackNode) node, key, value);
-   }
+        int cmp = compare(key, node.key);
+        if (cmp < 0)
+            node.left = insert((RedBlackNode) node.left, key, value);
+        else if (cmp > 0)
+            node.right = insert((RedBlackNode) node.right, key, value);
+        else
+            node.value = value;
 
-   private RedBlackNode insert(RedBlackNode node, K key, V value) {
-      if (node == null) return new RedBlackNode(key, value);
+        if (isRed(node.right) && !isRed(node.left))
+            node = rotateLeft(node);
 
-      int cmp = compare(key, node.key);
-      if (cmp < 0)
-         node.left = insert((RedBlackNode) node.left, key, value);
-      else if (cmp > 0)
-         node.right = insert((RedBlackNode) node.right, key, value);
-      else
-         node.value = value;
+        if (isRed(node.left) && isRed(((RedBlackNode) node.left).left))
+            node = rotateRight(node);
 
-      if (node.right != null && ((RedBlackNode) node.right).isRed() &&
-            (node.left == null || !((RedBlackNode) node.left).isRed()))
-         node = rotateLeft(node);
+        if (isRed(node.left) && isRed(node.right))
+            flipColors(node);
 
-      if (node.left != null && ((RedBlackNode) node.left).isRed() &&
-            node.left.left != null && ((RedBlackNode) node.left.left).isRed())
-         node = rotateRight(node);
+        return node;
+    }
 
-      if (node.left != null && ((RedBlackNode) node.left).isRed() &&
-            node.right != null && ((RedBlackNode) node.right).isRed())
-         flipColors(node);
+    @Override
+    protected Node<K, V> delete(Node<K, V> node, K key) {
+        if (node == null)
+            return null;
 
-      return node;
-   }
+        RedBlackNode root = (RedBlackNode) node;
 
-   protected Node<K, V> hibbardDelete(Node<K, V> node, K key) {
-      if (node == null)
-         return null;
+        if (!isRed(root.left) && !isRed(root.right))
+            root.color = RedBlackNode.RED;
 
-      int cmp = compare(key, node.key);
-      if (cmp < 0)
-         node.left = delete(node.left, key);
-      else if (cmp > 0)
-         node.right = delete(node.right, key);
-      else {
-         if (node.left == null) return node.right;
-         if (node.right == null) return node.left;
+        RedBlackNode result = delete(root, key);
+        if (result != null)
+            result.color = RedBlackNode.BLACK;
+        return result;
+    }
 
-         RedBlackNode maxLeft = (RedBlackNode) getMaxNode(node.left);
-         node.key = maxLeft.key;
-         node.value = maxLeft.value;
-         node.left = deleteMax(node.left);
-      }
+    private RedBlackNode delete(RedBlackNode h, K key) {
+        if (compare(key, h.key) < 0) {
+            if (!isRed(h.left) && (h.left == null || !isRed(((RedBlackNode) h.left).left)))
+                h = moveRedLeft(h);
+            h.left = delete((RedBlackNode) h.left, key);
 
-      return node;
-   }
+        } else {
+            if (isRed(h.left))
+                h = rotateRight(h);
 
-   @Override
-   protected Node<K, V> delete(Node<K, V> node, K key) {
-      if (node == null)
-         return null;
+            if (compare(key, h.key) == 0 && h.right == null) {
+                return null;
+            }
 
-      int cmp = compare(key, node.key);
-      if (cmp < 0)
-         node.left = delete(node.left, key);
-      else if (cmp > 0)
-         node.right = delete(node.right, key);
-      else {
-         if (node.left == null) return node.right;
-         if (node.right == null) return node.left;
+            if (!isRed(h.right) && (h.right == null || !isRed(((RedBlackNode) h.right).left)))
+                h = moveRedRight(h);
 
-         RedBlackNode maxLeft = (RedBlackNode) getMaxNode(node.left);
-         node.key = maxLeft.key;
-         node.value = maxLeft.value;
-         node.left = deleteMax(node.left);
-      }
+            if (compare(key, h.key) == 0) {
+                RedBlackNode min = (RedBlackNode) getMinNode(h.right);
+                h.key = min.key;
+                h.value = min.value;
+                h.right = deleteMin(h.right);
+            } else {
+                h.right = delete((RedBlackNode) h.right, key);
+            }
+        }
 
-      return node;
-   }
+        return balance(h);
+    }
 
-   private RedBlackNode moveRedLeft(RedBlackNode h) {
-      flipColors(h);
-      if (((RedBlackNode) h.right.left).isRed()) {
-         h.right = (RedBlackNode) rotateRight((RedBlackNode) h.right);
-         h = rotateLeft(h);
-         flipColors(h);
-      }
-      return h;
-   }
+    private RedBlackNode deleteMin(Node<K, V> node) {
+        if (node.left == null) {
+            return null;
+        }
 
-   private RedBlackNode moveRedRight(RedBlackNode h) {
-      flipColors(h);
-      if (((RedBlackNode) h.left.left).isRed()) {
-         h = rotateRight(h);
-         flipColors(h);
-      }
-      return h;
-   }
+        RedBlackNode h = (RedBlackNode) node;
+
+        if (!isRed(h.left) && (h.left == null || !isRed(((RedBlackNode) h.left).left)))
+            h = moveRedLeft(h);
+
+        h.left = deleteMin(h.left);
+        return balance(h);
+    }
+
+    private RedBlackNode moveRedLeft(RedBlackNode h) {
+        flipColors(h);
+        if (isRed(((RedBlackNode) h.right).left)) {
+            h.right = rotateRight((RedBlackNode) h.right);
+            h = rotateLeft(h);
+            flipColors(h);
+        }
+        return h;
+    }
+
+    private RedBlackNode moveRedRight(RedBlackNode h) {
+        flipColors(h);
+        if (isRed(((RedBlackNode) h.left).left)) {
+            h = rotateRight(h);
+            flipColors(h);
+        }
+        return h;
+    }
 }
