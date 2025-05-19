@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public class InsertionBenchmark {
-    static final int START = 2000, END = 50_000, STEP = 2000;
+    static final int START = 50_000, END = 1_000_000, STEP = 50_000;
 
     public static void main(String[] args) throws IOException {
         List<Integer> ns = new ArrayList<>();
@@ -41,7 +41,7 @@ public class InsertionBenchmark {
                 new String[]{"AVL Tree", "Red-Black Tree"},
                 "Insertion Time vs. Number of Elements",
                 "Number of Elements (n)",
-                "Time (ms)",
+                "Time (µs)",
                 "insertion_time_chart.png"
         );
 
@@ -49,11 +49,13 @@ public class InsertionBenchmark {
 
     private static double measureInsertionTime(Supplier<BSTSet<Integer>> setSupplier, List<Integer> keys) {
         BSTSet<Integer> set = setSupplier.get();
-        long start = System.nanoTime();
+        long sum = 0;
         for (int key : keys) {
+            long start = System.nanoTime();
             set.insert(key);
+            long end = System.nanoTime();
+            sum += end - start;
         }
-        long end = System.nanoTime();
-        return (end - start) / 1e6;
+        return (double) sum / keys.size() / 1e3;
     }
 }

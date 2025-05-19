@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public class SearchBenchmark {
-    static final int START = 2000, END = 50_000, STEP = 2000;
+    static final int START = 50_000, END = 1_000_000, STEP = 50_000;
 
     public static void main(String[] args) throws IOException {
         List<Integer> ns = new ArrayList<>();
@@ -38,7 +38,7 @@ public class SearchBenchmark {
                 new String[]{"AVL Tree", "Red-Black Tree"},
                 "Search Time vs. Number of Elements",
                 "Number of Elements (n)",
-                "Time (ms)",
+                "Time (µs)",
                 "search_time_chart.png"
         );
 
@@ -53,12 +53,13 @@ public class SearchBenchmark {
 
         Collections.shuffle(keys);
 
-        long start = System.nanoTime();
+        long sum = 0;
         for (int key : keys) {
+            long start = System.nanoTime();
             set.search(key);
+            long end = System.nanoTime();
+            sum += end - start;
         }
-        long end = System.nanoTime();
-
-        return (end - start) / 1e6;
+        return (double) sum / keys.size() / 1e3;
     }
 }
