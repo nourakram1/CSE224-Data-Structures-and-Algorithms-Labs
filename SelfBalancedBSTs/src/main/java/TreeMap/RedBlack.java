@@ -1,7 +1,19 @@
 package TreeMap;
 
+/**
+ * Left Leaning Red-Black Tree implementation extending a generic Binary Search Tree (BST).
+ * Maintains balance using color rules and rotations to ensure logarithmic time
+ * operations.
+ * 
+ * Robert Sedgwick paper 2008: https://sedgewick.io/wp-content/themes/sedgewick/papers/2008LLRB.pdf
+ * reference code: https://algs4.cs.princeton.edu/33balanced/RedBlackBST.java.html 
+ */
 public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
 
+    /**
+     * Internal node class for Red-Black Tree nodes.
+     * Extends the generic Node class and adds color information.
+     */
     private class RedBlackNode extends Node<K, V> {
         public static final boolean RED = true;
         public static final boolean BLACK = false;
@@ -10,17 +22,28 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
 
         public RedBlackNode(K key, V value) {
             super(key, value);
-            this.color = RED;
+            this.color = RED; // New nodes are initially red
         }
-
     }
 
+    /**
+     * Returns true if the given node is red.
+     * 
+     * @param x Node to check
+     * @return true if red, false otherwise
+     */
     private boolean isRed(Node<K, V> x) {
         if (x == null)
             return false;
         return ((RedBlackNode) x).color == RedBlackNode.RED;
     }
 
+    /**
+     * Performs a right rotation on the given node.
+     * 
+     * @param node Node to rotate
+     * @return New root after rotation
+     */
     private RedBlackNode rotateRight(RedBlackNode node) {
         RedBlackNode x = (RedBlackNode) node.left;
         node.left = x.right;
@@ -30,6 +53,12 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
         return x;
     }
 
+    /**
+     * Performs a left rotation on the given node.
+     * 
+     * @param node Node to rotate
+     * @return New root after rotation
+     */
     private RedBlackNode rotateLeft(RedBlackNode node) {
         RedBlackNode x = (RedBlackNode) node.right;
         node.right = x.left;
@@ -39,12 +68,25 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
         return x;
     }
 
+    /**
+     * Flips the color of the node and its children.
+     * Used when both children are red to split 4-nodes.
+     * 
+     * @param node Node to flip colors on
+     */
     private void flipColors(RedBlackNode node) {
         node.color = !node.color;
         ((RedBlackNode) node.left).color = !((RedBlackNode) node.left).color;
         ((RedBlackNode) node.right).color = !((RedBlackNode) node.right).color;
     }
 
+    /**
+     * Balances the subtree rooted at the given node.
+     * Applies rotations and color flips as necessary.
+     * 
+     * @param h Node to balance
+     * @return Balanced node
+     */
     private RedBlackNode balance(RedBlackNode h) {
         if (isRed(h.right) && !isRed(h.left))
             h = rotateLeft(h);
@@ -56,13 +98,25 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
         return h;
     }
 
+    /**
+     * Inserts a key-value pair into the tree and ensures the root is black.
+     * 
+     * @param node  Root node
+     * @param key   Key to insert
+     * @param value Value to insert
+     * @return Updated root node
+     */
     @Override
     protected Node<K, V> insert(Node<K, V> node, K key, V value) {
         RedBlackNode root = insert((RedBlackNode) node, key, value);
-        root.color = RedBlackNode.BLACK;
+        root.color = RedBlackNode.BLACK; // Root must always be black
         return root;
     }
 
+    /**
+     * Recursive insertion of key-value pair.
+     * Applies balancing after insertion.
+     */
     private RedBlackNode insert(RedBlackNode node, K key, V value) {
         if (node == null) {
             size++;
@@ -89,6 +143,13 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
         return node;
     }
 
+    /**
+     * Deletes the node with the given key.
+     * 
+     * @param node Root node
+     * @param key  Key to delete
+     * @return Updated root node
+     */
     @Override
     protected Node<K, V> delete(Node<K, V> node, K key) {
         if (node == null)
@@ -105,6 +166,13 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
         return result;
     }
 
+    /**
+     * Recursive deletion logic using left-leaning red-black tree rules.
+     * 
+     * @param h   Node to delete from
+     * @param key Key to delete
+     * @return Updated node
+     */
     private RedBlackNode delete(RedBlackNode h, K key) {
         if (compare(key, h.key) < 0) {
             if (!isRed(h.left) && (h.left == null || !isRed(((RedBlackNode) h.left).left)))
@@ -135,6 +203,12 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
         return balance(h);
     }
 
+    /**
+     * Deletes the minimum node in the subtree.
+     * 
+     * @param node Root of the subtree
+     * @return Updated root after deletion
+     */
     private RedBlackNode deleteMin(Node<K, V> node) {
         if (node.left == null) {
             return null;
@@ -149,6 +223,13 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
         return balance(h);
     }
 
+    /**
+     * Moves a red link left to prepare for deletion.
+     * Used when left child is not red.
+     * 
+     * @param h Node to modify
+     * @return Modified node
+     */
     private RedBlackNode moveRedLeft(RedBlackNode h) {
         flipColors(h);
         if (isRed(((RedBlackNode) h.right).left)) {
@@ -159,6 +240,13 @@ public class RedBlack<K extends Comparable<K>, V> extends BST<K, V> {
         return h;
     }
 
+    /**
+     * Moves a red link right to prepare for deletion.
+     * Used when right child is not red.
+     * 
+     * @param h Node to modify
+     * @return Modified node
+     */
     private RedBlackNode moveRedRight(RedBlackNode h) {
         flipColors(h);
         if (isRed(((RedBlackNode) h.left).left)) {
