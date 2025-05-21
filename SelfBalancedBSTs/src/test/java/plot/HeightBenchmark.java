@@ -47,12 +47,20 @@ public class HeightBenchmark {
     }
 
     private static double measureHeight(Supplier<BSTSet<Integer>> setSupplier, List<Integer> keys) {
-        BSTSet<Integer> set = setSupplier.get();
+        final int trials = 3;
+        double totalHeight = 0;
 
-        for (int key : keys) {
-            set.insert(key);
+        for (int t = 0; t < trials; t++) {
+            BSTSet<Integer> set = setSupplier.get();
+            List<Integer> shuffledKeys = new ArrayList<>(keys);
+            Collections.shuffle(shuffledKeys);
+            for (int key : shuffledKeys) {
+                set.insert(key);
+            }
+            totalHeight += set.height();
         }
 
-        return set.height();
+        return totalHeight / trials;
     }
+
 }

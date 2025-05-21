@@ -45,21 +45,28 @@ public class SearchBenchmark {
     }
 
     private static double measureSearchTime(Supplier<BSTSet<Integer>> setSupplier, List<Integer> keys) {
-        BSTSet<Integer> set = setSupplier.get();
+        final int trials = 3;
+        double total = 0;
 
-        for (int key : keys) {
-            set.insert(key);
-        }
+        for (int i = 0; i < trials; i++) {
+            BSTSet<Integer> set = setSupplier.get();
+            for (int key : keys) {
+                set.insert(key);
+            }
 
-        Collections.shuffle(keys);
+            List<Integer> shuffledKeys = new ArrayList<>(keys);
+            Collections.shuffle(shuffledKeys);
 
-        long sum = 0;
-        for (int key : keys) {
             long start = System.nanoTime();
-            set.search(key);
+            for (int key : shuffledKeys) {
+                set.search(key);
+            }
             long end = System.nanoTime();
-            sum += end - start;
+
+            total +=  (end - start) ;
         }
-        return (double) sum / keys.size() / 1e3;
+
+        return total / trials/ 1e3;
     }
+
 }

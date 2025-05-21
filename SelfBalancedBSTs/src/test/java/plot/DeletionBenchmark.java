@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class InsertionBenchmark {
+public class DeletionBenchmark {
     static final int START = 50_000, END = 1_000_000, STEP = 50_000;
 
     public static void main(String[] args) throws IOException {
@@ -17,6 +17,7 @@ public class InsertionBenchmark {
         List<Double> rbTimes = new ArrayList<>();
 
         Random rand = new Random();
+
         for (int n = START; n <= END; n += STEP) {
             ns.add(n);
 
@@ -26,43 +27,49 @@ public class InsertionBenchmark {
                     .boxed()
                     .toList();
 
-            double timeAVL = measureInsertionTime(AVLSet::new, keys);
-            double timeRB = measureInsertionTime(RedBlackSet::new, keys);
+            double timeAVL = measureDeletionTime(AVLSet::new, keys);
+            double timeRB = measureDeletionTime(RedBlackSet::new, keys);
 
             avlTimes.add(timeAVL);
             rbTimes.add(timeRB);
 
-            System.out.printf("n = %d → AVL: %.3f ms, RB: %.3f ms%n", n, timeAVL, timeRB);
+            System.out.printf("n = %d → AVL Delete: %.3f µs, RB Delete: %.3f µs%n", n, timeAVL, timeRB);
         }
 
         ChartPlotter.plotAndSave(
                 ns,
                 Arrays.asList(avlTimes, rbTimes),
                 new String[]{"AVL Tree", "Red-Black Tree"},
-                "Insertion Time vs. Number of Elements",
+                "Deletion Time vs. Number of Elements",
                 "Number of Elements (n)",
                 "Time (µs)",
-                "target/test-output/plots/insertion_time_chart.png"
+                "target/test-output/plots/delete_time_chart.png"
         );
-
     }
 
-    private static double measureInsertionTime(Supplier<BSTSet<Integer>> setSupplier, List<Integer> keys) {
-        final int trials = 3;
-        double total = 0;
+    private static double measureDeletionTime(Supplier<BSTSet<Integer>> setSupplier, List<Integer> keys) {
+        final int trials = 5;
+        double totalTime = 0;
 
-        for (int i = 0; i < trials; i++) {
+        for (int t = 0; t < trials; t++) {
             BSTSet<Integer> set = setSupplier.get();
-            List<Integer> shuffledKeys = new ArrayList<>(keys);
-            Collections.shuffle(shuffledKeys);
-            long start = System.nanoTime();
-            for (int key : shuffledKeys) {
+
+            for (int key : keys) {
                 set.insert(key);
             }
+
+            List<Integer> shuffledKeys = new ArrayList<>(keys);
+            Collections.shuffle(shuffledKeys);
+
+            long start = System.nanoTime();
+            for (int key : shuffledKeys) {
+                set.delete(key);
+            }
             long end = System.nanoTime();
-            total += (end - start) ;
+
+            totalTime += (end - start);
         }
 
-        return total / trials / 1e3;
+        return totalTime / trials / 1e3; // return µs
     }
 }
