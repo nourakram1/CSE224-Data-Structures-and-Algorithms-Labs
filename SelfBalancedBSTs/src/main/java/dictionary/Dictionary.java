@@ -1,5 +1,6 @@
 package dictionary;
 
+import tree.TreePrinter;
 import tree.set.BSTSet;
 
 import java.util.List;
@@ -49,5 +50,10 @@ public class Dictionary {
         List<String> removed = bstSet.removeAll(words);
         System.out.println("Deleted " + removed.size() + " words.");
         System.out.println("Failed to delete " + (words.size() - removed.size()) + " words.");
+    }
+
+    @Override
+    public String toString() {
+        return TreePrinter.getTreeDisplay(bstSet.getRoot());
     }
 }

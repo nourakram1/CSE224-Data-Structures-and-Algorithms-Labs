@@ -35,4 +35,8 @@ public abstract class BSTSet<K extends Comparable<K>> {
     public int size() {
         return bstMap.size();
     }
+
+    public BSTMap.Node<K, ?> getRoot() {
+        return bstMap.getRoot();
+    }
 }

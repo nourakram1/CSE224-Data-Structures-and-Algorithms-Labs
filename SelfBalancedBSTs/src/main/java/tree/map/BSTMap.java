@@ -3,12 +3,18 @@ package tree.map;
 import java.util.Comparator;
 import java.util.Objects;
 
+import tree.TreePrinter.PrintableNode;
+
 public abstract class BSTMap<K extends Comparable<K>, V> {
    protected Node<K, V> root;
+   public Node<K, V> getRoot() {
+      return root;
+   }
+
    protected int size;
    protected final Comparator<? super K> comparator;
 
-   protected abstract static class Node<K extends Comparable<K>, V> {
+   public abstract static class Node<K extends Comparable<K>, V> implements PrintableNode {
       public K key;
       public V value;
       public Node<K, V> left, right;
@@ -16,6 +22,21 @@ public abstract class BSTMap<K extends Comparable<K>, V> {
       Node(K key, V value) {
          this.key = key;
          this.value = value;
+      }
+
+      @Override
+      public PrintableNode getLeft() {
+         return left;
+      }
+
+      @Override
+      public PrintableNode getRight() {
+         return right;
+      }
+
+      @Override
+      public String getText() {
+         return key.toString();
       }
    }
 

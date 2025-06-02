@@ -31,7 +31,8 @@ public class Main {
             System.out.println("3. Delete a word");
             System.out.println("4. Insert a list of words from a file");
             System.out.println("5. Delete a list of words from a file");
-            System.out.println("6. Exit");
+            System.out.println("6. Print Tree");
+            System.out.println("7. Exit");
 
             int option = Integer.parseInt(scanner.nextLine());
 
@@ -67,6 +68,11 @@ public class Main {
                     break;
                 }
                 case 6: {
+                    System.out.println("Current tree structure:");
+                    System.out.println(dictionary);
+                    return;
+                }
+                case 7: {
                     System.out.println("Exiting the program. Goodbye!");
                     scanner.close();
                     return;
