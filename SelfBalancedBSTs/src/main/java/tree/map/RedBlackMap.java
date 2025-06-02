@@ -26,7 +26,7 @@ public class RedBlackMap<K extends Comparable<K>, V> extends BSTMap<K, V> {
 
         @Override
         public String getText() {
-            final String colorCode = (color == RED) ? "\u001B[31m" : "\u001B[30m"; // Red or Black
+            final String colorCode = (color == RED) ? "\u001B[31m" : "";
             final String resetCode = "\u001B[0m";
             return colorCode + key + resetCode;
         }

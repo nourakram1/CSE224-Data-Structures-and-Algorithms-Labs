@@ -17,12 +17,17 @@ public class TreePrinter {
     public String getText();
   }
 
+  // Removes ANSI escape codes from a string (e.g., color codes)
+  private static String stripAnsi(String text) {
+    return text == null ? "" : text.replaceAll("\u001B\\[[;\\d]*m", "");
+  }
+
   // Print a binary tree.
   public static String getTreeDisplay(PrintableNode root) {
     StringBuilder sb = new StringBuilder();
-    List<List<String>> lines = new ArrayList<List<String>>();
-    List<PrintableNode> level = new ArrayList<PrintableNode>();
-    List<PrintableNode> next = new ArrayList<PrintableNode>();
+    List<List<String>> lines = new ArrayList<>();
+    List<PrintableNode> level = new ArrayList<>();
+    List<PrintableNode> next = new ArrayList<>();
 
     level.add(root);
     int nn = 1;
@@ -30,7 +35,7 @@ public class TreePrinter {
 
     while (nn != 0) {
       nn = 0;
-      List<String> line = new ArrayList<String>();
+      List<String> line = new ArrayList<>();
       for (PrintableNode n : level) {
         if (n == null) {
           line.add(null);
@@ -39,8 +44,9 @@ public class TreePrinter {
         } else {
           String aa = n.getText();
           line.add(aa);
-          if (aa.length() > widest)
-            widest = aa.length();
+          int visibleLength = stripAnsi(aa).length();
+          if (visibleLength > widest)
+            widest = visibleLength;
 
           next.add(n.getLeft());
           next.add(n.getRight());
@@ -67,44 +73,45 @@ public class TreePrinter {
     for (int i = 0; i < lines.size(); i++) {
       List<String> line = lines.get(i);
       int hpw = (int) Math.floor(perpiece / 2f) - 1;
+
       if (i > 0) {
         for (int j = 0; j < line.size(); j++) {
-
-          // split node
           char c = ' ';
           if (j % 2 == 1) {
             if (line.get(j - 1) != null) {
-              c = (line.get(j) != null) ? '#' : '#';
+              c = (line.get(j) != null) ? '┴' : '┘';
             } else {
               if (j < line.size() && line.get(j) != null)
-                c = '#';
+                c = '└';
             }
           }
           sb.append(c);
 
-          // lines and spaces
           if (line.get(j) == null) {
             for (int k = 0; k < perpiece - 1; k++) {
               sb.append(' ');
             }
           } else {
             for (int k = 0; k < hpw; k++) {
-              sb.append(j % 2 == 0 ? " " : "#");
+              sb.append(j % 2 == 0 ? " " : "─");
             }
-            sb.append(j % 2 == 0 ? "#" : "#");
+            sb.append(j % 2 == 0 ? "┌" : "┐");
             for (int k = 0; k < hpw; k++) {
-              sb.append(j % 2 == 0 ? "#" : " ");
+              sb.append(j % 2 == 0 ? "─" : " ");
             }
           }
         }
         sb.append('\n');
       }
+
       for (int j = 0; j < line.size(); j++) {
         String f = line.get(j);
         if (f == null)
           f = "";
-        int gap1 = (int) Math.ceil(perpiece / 2f - f.length() / 2f);
-        int gap2 = (int) Math.floor(perpiece / 2f - f.length() / 2f);
+
+        int visibleLen = stripAnsi(f).length();
+        int gap1 = (int) Math.ceil(perpiece / 2f - visibleLen / 2f);
+        int gap2 = (int) Math.floor(perpiece / 2f - visibleLen / 2f);
 
         for (int k = 0; k < gap1; k++) {
           sb.append(' ');
@@ -118,6 +125,7 @@ public class TreePrinter {
 
       perpiece /= 2;
     }
+
     return sb.toString();
   }
 }

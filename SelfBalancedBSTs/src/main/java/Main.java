@@ -70,7 +70,7 @@ public class Main {
                 case 6: {
                     System.out.println("Current tree structure:");
                     System.out.println(dictionary);
-                    return;
+                    break;
                 }
                 case 7: {
                     System.out.println("Exiting the program. Goodbye!");
